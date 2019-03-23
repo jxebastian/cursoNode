@@ -1,0 +1,25 @@
+{{>header}}
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Telefono</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each lista as |item|}}
+            <tr>
+                <td>{{item.identificacion}}</th>
+                <td>{{item.nombre}}</td>
+                <td>{{item.correo}}</td>
+                <td>{{item.telefono}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{>footer}}

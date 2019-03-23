@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser')
+const funciones = require('./funciones');
 
 const directorioPublico = path.join(__dirname, '../public');
 const directorioPartials = path.join(__dirname, '../partials');
@@ -21,7 +22,16 @@ app.set('view engine', 'hbs');
 app.get('/', (req, res) => {
   res.render('index');
 });
+ 
+console.log(funciones.obtenerUsuarios());
+
+app.get('/roles-usuarios', (req, res) => {
+  res.render('roles-usuarios', {
+    lista: funciones.obtenerUsuarios()
+  });
+});
 
 app.listen(3000, () => {
     console.log('Escuchando por el puerto 3000');
+    
 });
