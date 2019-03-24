@@ -7,6 +7,9 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Correo</th>
                 <th scope="col">Telefono</th>
+                <th scope="col">Rol</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +19,9 @@
                 <td>{{item.nombre}}</td>
                 <td>{{item.correo}}</td>
                 <td>{{item.telefono}}</td>
+                <td>{{item.rol}}</td>
+                <td><button type="button" class="btn btn-primary">Actualizar</button></td>
+                <td><button type="button" class="btn btn-primary">Cambiar el rol</button></td>
             </tr>
             {{/each}}
         </tbody>
