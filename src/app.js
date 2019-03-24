@@ -24,6 +24,12 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
+app.get('/registro', (req, res) => {
+  res.render('registro');
+  text = funciones.registrarUsuario(req.query);
+  console.log(text)
+});
+
 app.get('/roles-usuarios', (req, res) => {
   res.render('roles-usuarios', {
     lista: funciones.obtenerUsuarios()
