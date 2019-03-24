@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const hbs = require('hbs');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const funciones = require('./funciones');
+require('./helpers');
 
 const directorioPublico = path.join(__dirname, '../public');
 const directorioPartials = path.join(__dirname, '../partials');
@@ -22,7 +23,7 @@ app.set('view engine', 'hbs');
 app.get('/', (req, res) => {
   res.render('index');
 });
- 
+
 console.log(funciones.obtenerUsuarios());
 
 app.get('/roles-usuarios', (req, res) => {
@@ -31,7 +32,16 @@ app.get('/roles-usuarios', (req, res) => {
   });
 });
 
+let cursos = funciones.obtenerCursos();
+let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
+
+app.get('/cursos', (req, res) => {
+  res.render('cursos', {
+    lista: cursosDisponibles
+  });
+});
+
 app.listen(3000, () => {
     console.log('Escuchando por el puerto 3000');
-    
+
 });

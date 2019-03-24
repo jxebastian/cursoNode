@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 listaUsuarios = [];
+listaCursos = [];
 const root = path.join(__dirname, '../');
 
 const obtenerUsuarios = () => {
@@ -13,6 +14,16 @@ const obtenerUsuarios = () => {
     return listaUsuarios;
 }
 
+const obtenerCursos = () => {
+    try {
+        listaCursos = require('./cursosPruebaFelipe.json');
+    } catch (error) {
+        listaCursos = [];
+    }
+    return listaCursos;
+}
+
 module.exports = {
-    obtenerUsuarios
+    obtenerUsuarios,
+    obtenerCursos
 }
