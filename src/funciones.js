@@ -14,6 +14,29 @@ const obtenerUsuarios = () => {
     return listaUsuarios;
 }
 
+const obtenerUsuario = (identificacion) => {
+    obtenerUsuarios();
+    return listaUsuarios.find(usuario => usuario.identificacion == identificacion);
+}
+
+const actualizarUsuario = (datos) => {
+    obtenerUsuarios();
+    let usuario = obtenerUsuario(datos.identificacion);
+    usuario['nombre'] = datos.nombre;
+    usuario['correo'] = datos.correo;
+    usuario['telefono'] = parseInt(datos.telefono);
+    guardarUsuarios();
+    return true;
+}
+
+const guardarUsuarios = () => {
+    let datos = JSON.stringify(listaUsuarios);
+    fs.writeFile('./src/usuarios.json', datos, (err) =>{
+        if(err) throw (err);
+        console.log('archivo creado con exito');
+    });
+}
+
 const obtenerCursos = () => {
     try {
         listaCursos = require('./cursosPruebaFelipe.json');
@@ -54,6 +77,8 @@ const crear = (usuario) => {
 
 module.exports = {
     obtenerUsuarios,
+    obtenerUsuario,
+    actualizarUsuario,
     obtenerCursos,
     registrarUsuario
 }

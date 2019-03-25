@@ -20,12 +20,11 @@
                 <td>{{item.correo}}</td>
                 <td>{{item.telefono}}</td>
                 <td>{{item.rol}}</td>
-                <td><button type="button" class="btn btn-primary">Actualizar</button></td>
+                <td><a href="editar-usuario/{{item.identificacion}}" class="btn btn-primary">Actualizar</a></td>
                 <td><button type="button" class="btn btn-primary">Cambiar el rol</button></td>
             </tr>
             {{/each}}
         </tbody>
     </table>
 </div>
-
 {{>footer}}

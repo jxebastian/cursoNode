@@ -17,6 +17,7 @@ app.use('/css', express.static(dirNode_modules + '/bootstrap/dist/css'));
 app.use('/js', express.static(dirNode_modules + '/jquery/dist'));
 app.use('/js', express.static(dirNode_modules + '/popper.js/dist'));
 app.use('/js', express.static(dirNode_modules + '/bootstrap/dist/js'));
+app.use('/js', express.static('../src'));
 
 app.set('view engine', 'hbs');
 
@@ -36,6 +37,22 @@ app.get('/roles-usuarios', (req, res) => {
   });
 });
 
+app.get('/editar-usuario/:id' , (req, res) => {
+  let datos;
+  let actualizado = false;
+  if (req.query.identificacion == undefined){
+    datos = false;
+  }else {
+    datos = true;
+    actualizado = funciones.actualizarUsuario(req.query);
+  }
+  res.render('editar-usuario', {
+    usuario: funciones.obtenerUsuario(req.params.id),
+    datos: datos,
+    actualizado: actualizado
+  })
+});
+
 app.get('/cursos', (req, res) => {
   let cursos = funciones.obtenerCursos();
   let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
@@ -48,3 +65,5 @@ app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
 
 });
+
+module.exports = {app}
