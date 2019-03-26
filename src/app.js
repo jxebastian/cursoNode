@@ -61,6 +61,12 @@ app.get('/cursos', (req, res) => {
   });
 });
 
+app.get('/registroCurso', (req, res) => {
+  res.render('registroCurso');
+  text = funciones.registrarCurso(req.query);
+  console.log(text)
+});
+
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
 

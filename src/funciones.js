@@ -75,10 +75,43 @@ const crear = (usuario) => {
     });
 }
 
+const crearCurso = (curso) => {
+    let curse = {
+        id:curso.id,
+        nombre: curso.nombre,
+        descripcion: curso.descripcion,
+        valor: curso.valor,
+        modalidad: curso.modalidad,
+        intensidad: curso.intensidad,
+        estado: curso.estado
+    };
+    listaCursos.push(curse);
+    let datos = JSON.stringify(listaCursos);
+    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
+        if(err) throw (err);
+        console.log('Archivo creado con éxito')
+    });
+}
+
+const registrarCurso = (curso) =>{
+    obtenerCursos()
+    let existe = listaCursos.find(curse => curse.id == curso.identificacion)
+    if (!existe){
+        crear(curso);
+        text = "Curso con identificacion: " + curso.id + " ha sido creado satisfactoriamente"
+        return text
+    } else {
+        text = 'El curso con id ' + curso.id + ' ya está registrado, por favor ingrese otra identificacion'
+        return text
+    }
+}
+
 module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
     actualizarUsuario,
     obtenerCursos,
-    registrarUsuario
+    registrarUsuario,
+    crearCurso,
+    registrarCurso
 }
