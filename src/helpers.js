@@ -24,8 +24,6 @@ hbs.registerHelper('listarCursos', (cursos) => {
               <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordion">
                 <div class="card-body">
                   ${contenido}
-                  <br>
-                  <a href="/roles-usuarios" class="btn btn-primary">Inscribirse</a>
                 </div>
               </div>
             </div>`;

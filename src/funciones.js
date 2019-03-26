@@ -3,6 +3,7 @@ const path = require('path');
 
 listaUsuarios = [];
 listaCursos = [];
+listaCursosXUsuarios = [];
 const root = path.join(__dirname, '../');
 
 const obtenerUsuarios = () => {
@@ -29,7 +30,10 @@ const actualizarUsuario = (datos) => {
     return true;
 }
 
-const cambiarRol = (datos) =>{
+const cambiarRol = (datos) => {
+    if (datos.rol == 'Selecione') {
+        return false;
+    }
     obtenerUsuarios();
     let usuario = obtenerUsuario(datos.identificacion);
     usuario['rol'] = datos.rol;
@@ -39,8 +43,8 @@ const cambiarRol = (datos) =>{
 
 const guardarUsuarios = () => {
     let datos = JSON.stringify(listaUsuarios);
-    fs.writeFile('./src/usuarios.json', datos, (err) =>{
-        if(err) throw (err);
+    fs.writeFile('./src/usuarios.json', datos, (err) => {
+        if (err) throw (err);
         console.log('archivo creado con exito');
     });
 }
@@ -54,10 +58,24 @@ const obtenerCursos = () => {
     return listaCursos;
 }
 
-const registrarUsuario = (usuario) =>{
+const obtenerCursosXUsuarios = () => {
+    try {
+        listaCursos = require('./cursosXusuarios.json');
+    } catch (error) {
+        listaCursos = [];
+    }
+    return listaCursos;
+}
+
+const obtenerCursosDisponibles = () => {
+    obtenerCursos();
+    return listaCursos.filter(curso => curso.estado == 'disponible');
+}
+
+const registrarUsuario = (usuario) => {
     obtenerUsuarios()
     let existe = listaUsuarios.find(user => user.identificacion == usuario.identificacion)
-    if (!existe){
+    if (!existe) {
         crear(usuario);
         text = "Usuario con identificacion: " + usuario.identificacion + " ha sido creado satisfactoriamente"
         return text
@@ -78,7 +96,21 @@ const crear = (usuario) => {
     listaUsuarios.push(user);
     let datos = JSON.stringify(listaUsuarios);
     fs.writeFile('./src/usuarios.json', datos, (err) => {
-        if(err) throw (err);
+        if (err) throw (err);
+        console.log('Archivo creado con éxito')
+    });
+}
+
+const inscribirCurso = (datos) => {
+    obtenerCursosXUsuarios();
+    let nuevo = {
+        idCurso: datos.idCurso,
+        identificacionUsuario: datos.identificacion
+    }
+    listaCursosXUsuarios.push(nuevo);
+    let lista = JSON.stringify(listaCursosXUsuarios);
+    fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
+        if (err) throw (err);
         console.log('Archivo creado con éxito')
     });
 }
@@ -89,5 +121,7 @@ module.exports = {
     actualizarUsuario,
     cambiarRol,
     obtenerCursos,
+    obtenerCursosDisponibles,
+    inscribirCurso,
     registrarUsuario
 }

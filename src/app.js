@@ -80,6 +80,20 @@ app.get('/cursos', (req, res) => {
   });
 });
 
+app.route('/inscribir-curso')
+  .get((req, res) => {
+    let cursos = funciones.obtenerCursosDisponibles();
+    res.render('inscribir-curso', {
+      cursos: cursos
+    });
+  })
+  .post((req, res) => {
+    funciones.inscribirCurso(req.body);
+    res.render('inscribir-curso', {
+      cursos: funciones.obtenerCursosDisponibles()
+    })
+  })
+
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
 
