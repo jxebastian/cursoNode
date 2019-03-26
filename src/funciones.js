@@ -78,13 +78,13 @@ const crear = (usuario) => {
 const crearCurso = (curso) => {
     obtenerCursos()
     let curse = {
-        id:curso.id,
+        id: curso.id,
         nombre: curso.nombre,
         descripcion: curso.descripcion,
         valor: curso.valor,
         modalidad: curso.modalidad,
         intensidad: curso.intensidad,
-        estado: curso.estado
+        estado: 'disponible'
     };
     listaCursos.push(curse);
     let datos = JSON.stringify(listaCursos);
@@ -95,14 +95,17 @@ const crearCurso = (curso) => {
 }
 
 const registrarCurso = (curso) =>{
-    let existe = listaCursos.find(curse => curse.id == curso.identificacion)
-    if (!existe){
+    obtenerCursos()
+    let existe = listaCursos.find(curse => curse.id == curso.id)
+    if (!existe && curso.id != "undefined"){
         crearCurso(curso);
         text = "Curso con identificacion: " + curso.id + " ha sido creado satisfactoriamente"
         return text
-    } else {
+    } else if (curso.id != undefined) {
         text = 'El curso con id ' + curso.id + ' ya está registrado, por favor ingrese otra identificacion'
         return text
+    } else {
+        return ""
     }
 }
 

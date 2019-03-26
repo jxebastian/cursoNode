@@ -17,18 +17,29 @@
 		<label for="vallabel">Valor           </label><br>
 		<input id="vallabel"type="number" name="valor" required>
 	</p>
-	<p class="pclass">
-		<label for="modlabel">Modalidad       </label><br>
-		<input id="modlabel"type="text" name="modalidad" required>
-	</p>
+	<label>Seleccionar modalidad :
+	    <select class="pclass" id="modlabel" name="modalidad" required>
+	      <option value="presencial">Presencial</option>
+	      <option value="virtual">Virtual</option>
+	    </select>
+	 </label>
 	<p class="pclass">
 		<label for="intlabel">Intensidad      </label>
 		<input id="intlabel"type="number" name="intensidad" required>
 	</p>
-	<p class="pclass">
-		<label for="estlabel">Estado           </label><br>
-		<input id="estlabel"type="text" name="estado" required>
-	</p>
 	<button>Registrar</button>
 </form>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert-danger" role="alert">
+				<button class="close" data-dismiss="alert">
+					&times;
+				</button>
+				<strong>Ya existe un curso con esa ID !! por favor cambiarla</strong>
+			</div>
+		</div>
+	</div>
+</div>	
 {{>footer}}
+
