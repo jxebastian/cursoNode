@@ -29,6 +29,14 @@ const actualizarUsuario = (datos) => {
     return true;
 }
 
+const cambiarRol = (datos) =>{
+    obtenerUsuarios();
+    let usuario = obtenerUsuario(datos.identificacion);
+    usuario['rol'] = datos.rol;
+    guardarUsuarios();
+    return true;
+}
+
 const guardarUsuarios = () => {
     let datos = JSON.stringify(listaUsuarios);
     fs.writeFile('./src/usuarios.json', datos, (err) =>{
@@ -79,6 +87,7 @@ module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
     actualizarUsuario,
+    cambiarRol,
     obtenerCursos,
     registrarUsuario
 }

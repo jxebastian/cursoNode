@@ -37,22 +37,41 @@ app.get('/roles-usuarios', (req, res) => {
   });
 });
 
-app.get('/editar-usuario/:id' , (req, res) => {
-  let datos;
-  let actualizado = false;
-  if (req.query.identificacion == undefined){
-    datos = false;
-  }else {
-    datos = true;
-    actualizado = funciones.actualizarUsuario(req.query);
-  }
-  res.render('editar-usuario', {
-    usuario: funciones.obtenerUsuario(req.params.id),
-    datos: datos,
-    actualizado: actualizado
+app.route('/editar-usuario/:id')
+  .get((req, res) => {
+    res.render('editar-usuario', {
+      usuario: funciones.obtenerUsuario(req.params.id),
+      datos: false,
+      actualizado: false
+    })
   })
-});
+  .post((req, res) => {
+    let actualizado = false;
+    actualizado = funciones.actualizarUsuario(req.body);
+    res.render('editar-usuario', {
+      usuario: funciones.obtenerUsuario(req.params.id),
+      datos: true,
+      actualizado: actualizado
+    })
+  })
 
+app.route('/cambiar-rol/:id')
+  .get((req, res) => {
+    res.render('cambiar-rol', {
+      usuario: funciones.obtenerUsuario(req.params.id),
+      datos: false,
+      actualizado: false
+    })
+  })
+  .post((req, res) => {
+    let actualizado = false;
+    actualizado = funciones.cambiarRol(req.body);
+    res.render('cambiar-rol', {
+      usuario: funciones.obtenerUsuario(req.params.id),
+      datos: true,
+      actualizado: actualizado
+    })
+  })
 app.get('/cursos', (req, res) => {
   let cursos = funciones.obtenerCursos();
   let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
