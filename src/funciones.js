@@ -39,7 +39,7 @@ const guardarUsuarios = () => {
 
 const obtenerCursos = () => {
     try {
-        listaCursos = require('./cursosPruebaFelipe.json');
+        listaCursos = require('./cursos.json');
     } catch (error) {
         listaCursos = [];
     }
@@ -76,6 +76,7 @@ const crear = (usuario) => {
 }
 
 const crearCurso = (curso) => {
+    obtenerCursos()
     let curse = {
         id:curso.id,
         nombre: curso.nombre,
@@ -87,17 +88,16 @@ const crearCurso = (curso) => {
     };
     listaCursos.push(curse);
     let datos = JSON.stringify(listaCursos);
-    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
+    fs.writeFile('./src/cursos.json', datos, (err) => {
         if(err) throw (err);
         console.log('Archivo creado con éxito')
     });
 }
 
 const registrarCurso = (curso) =>{
-    obtenerCursos()
     let existe = listaCursos.find(curse => curse.id == curso.identificacion)
     if (!existe){
-        crear(curso);
+        crearCurso(curso);
         text = "Curso con identificacion: " + curso.id + " ha sido creado satisfactoriamente"
         return text
     } else {
@@ -112,6 +112,7 @@ module.exports = {
     actualizarUsuario,
     obtenerCursos,
     registrarUsuario,
+    obtenerCursos,
     crearCurso,
     registrarCurso
 }
