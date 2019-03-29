@@ -25,16 +25,87 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/registro', (req, res) => {
-  res.render('registro');
-  text = funciones.registrarUsuario(req.query);
-  console.log(text)
-});
+app.route('/registro')
+  .get((req, res) => {
+    res.render('registro',{
+      datos:false
+    });
+  })
+  .post((req, res) => {
+    let user = {
+      identificacion: parseInt(req.body.identificacion),
+      nombre: req.body.nombre,
+      correo: req.body.correo,
+      telefono: parseInt(req.body.telefono)
+    }
+    let creado =funciones.registrarUsuario(user);
+    res.render('registro', {
+        creado: creado,
+        datos: true,
+        usuario: user
+    })
+  })
+
+app.route('/darme-baja')
+  .get((req, res) => {
+    res.render('darme-baja',{
+      datos: false
+    })
+  })
+  .post((req, res) => {
+    let identificacion = parseInt(req.body.identificacion);
+    let existe = funciones.obtenerUsuario(identificacion);
+    if(existe){
+      cursosUsuario = funciones.obtenerCursosUsuario(existe);
+      cursosUsuario.forEach(curso =>{
+        curso.idUser = identificacion
+      })
+    } else {
+      cursosUsuario = []
+    }
+    res.render('darme-baja',{
+      datos:true,
+      idIngresado: identificacion,
+      lista: cursosUsuario,
+      existe: existe
+    })
+  })
+
+app.route('/dar-baja/:idUser'+'-'+':idCurso')
+  .get((req,res) => {
+    let usuario = funciones.obtenerUsuario(req.params.idUser);
+    let cursos = funciones.obtenerCursos()
+    let curso = cursos.find(curso => curso.id == req.params.idCurso)
+    let lista = [curso]
+    res.render('dar-baja',{
+      datos: false,
+      eliminado: false,
+      usuario: usuario,
+      curso: curso,
+      lista: lista
+    })
+  })
+  .post((req,res) => {
+    console.log('post')
+    let usuario = funciones.obtenerUsuario(req.params.idUser);
+    let cursos = funciones.obtenerCursos()
+    let curso = cursos.find(curso => curso.id == req.params.idCurso)
+    let eliminado = funciones.eliminarCursoXUsuario(curso.id,usuario.identifion)
+    res.render('dar-baja',{
+      datos: true,
+      eliminado: eliminado,
+      usuario: usuario,
+      curso: curso,
+      lista: []
+    })
+  })
+
 
 app.get('/roles-usuarios', (req, res) => {
   res.render('roles-usuarios', {
     lista: funciones.obtenerUsuarios()
   });
+
 });
 
 app.route('/editar-usuario/:id')

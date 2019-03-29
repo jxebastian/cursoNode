@@ -6,24 +6,3 @@ body {
     margin: 0;
     margin-bottom: 40px;
 }
-.regForm {
-  background: #fff;
-  padding: 4em 4em 2em;
-  max-width: 360px;
-  margin: 50px auto 0;
-  box-shadow: 0 0 1em #222;
-  border-radius: 2px;
-}
-
-.regForm p {
-  margin: 0 0 3em 0;
-  position: relative;
-}
-
-.regForm input {
-  display: block;
-  box-sizing: border-box;
-  width: 100%;
-  outline: none;
-  margin:0;
-}

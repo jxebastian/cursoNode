@@ -4,6 +4,8 @@ const path = require('path');
 listaUsuarios = [];
 listaCursos = [];
 listaCursosXUsuarios = [];
+listaCursosResultante = [];
+
 const root = path.join(__dirname, '../');
 
 const obtenerUsuarios = () => {
@@ -60,16 +62,30 @@ const obtenerCursos = () => {
 
 const obtenerCursosXUsuarios = () => {
     try {
-        listaCursos = require('./cursosXusuarios.json');
+        listaCursosXUsuarios = require('./cursosXusuarios.json');
     } catch (error) {
-        listaCursos = [];
+        listaCursosXUsuarios = [];
     }
-    return listaCursos;
+    return listaCursosXUsuarios;
 }
 
 const obtenerCursosDisponibles = () => {
     obtenerCursos();
     return listaCursos.filter(curso => curso.estado == 'disponible');
+}
+
+const obtenerCursosUsuario = (usuario) =>{
+    obtenerCursosXUsuarios();
+    obtenerCursos();
+    listaCursosResultante = []
+    let cursosEncontrados = listaCursosXUsuarios.filter(cursoE => cursoE.identificacionUsuario == usuario.identificacion);
+    cursosEncontrados.forEach(curso => {
+        let match = listaCursos.find(curso2 => curso2.idCurso == curso.id);
+        if(match){
+            listaCursosResultante.push(match)
+        }
+    })
+    return listaCursosResultante
 }
 
 const registrarUsuario = (usuario) => {
@@ -78,10 +94,12 @@ const registrarUsuario = (usuario) => {
     if (!existe) {
         crear(usuario);
         text = "Usuario con identificacion: " + usuario.identificacion + " ha sido creado satisfactoriamente"
-        return text
+        console.log(text)
+        /**/return true
     } else {
         text = 'El usuario con id ' + usuario.identificacion + ' ya está registrado, por favor ingrese otra identificacion'
-        return text
+        console.log(text)
+        /**/return false
     }
 }
 
@@ -115,6 +133,17 @@ const inscribirCurso = (datos) => {
     });
 }
 
+const eliminarCursoXUsuario = (idCurso,idUsuario) =>{
+    obtenerCursosXUsuarios();
+    let element = listaCursosXUsuarios.find(curso => (curso.idCurso == idCurso) && (curso.identificacionUsuario == idUsuario))
+    listaCursosXUsuarios.splice(listaCursosXUsuarios.indexOf(element),1);
+    let lista = JSON.stringify(listaCursosXUsuarios);
+    fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
+        if (err) throw (err);
+        return true
+    });
+}
+
 module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
@@ -123,5 +152,7 @@ module.exports = {
     obtenerCursos,
     obtenerCursosDisponibles,
     inscribirCurso,
-    registrarUsuario
+    registrarUsuario,
+    obtenerCursosUsuario,
+    eliminarCursoXUsuario
 }
