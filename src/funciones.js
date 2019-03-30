@@ -214,7 +214,7 @@ module.exports = {
     registrarUsuario,
     obtenerCursosUsuario,
     eliminarCursoXUsuario,
-    obtenerUsuariosXcurso
+    obtenerUsuariosXcurso,
     obtenerCursos,
     crearCurso,
     registrarCurso
