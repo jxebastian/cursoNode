@@ -80,7 +80,7 @@ const obtenerCursosUsuario = (usuario) => {
     listaCursosResultante = []
     let cursosEncontrados = listaCursosXUsuarios.filter(cursoE => cursoE.identificacionUsuario == usuario.identificacion);
     cursosEncontrados.forEach(curso => {
-        let match = listaCursos.find(curso2 => curso2.idCurso == curso.id);
+        let match = listaCursos.find(curso2 => curso2.id== curso.idCurso );
         if (match) {
             listaCursosResultante.push(match)
         }
@@ -127,8 +127,8 @@ const inscribirCurso = (datos) => {
         item.identificacionUsuario == datos.identificacion);
     if (!existe) {
         let nuevo = {
-            idCurso: datos.idCurso,
-            identificacionUsuario: datos.identificacion
+            idCurso: parseInt(datos.idCurso),
+            identificacionUsuario: parseInt(datos.identificacion)
         }
         listaCursosXUsuarios.push(nuevo);
         let lista = JSON.stringify(listaCursosXUsuarios);
@@ -150,7 +150,7 @@ const eliminarCursoXUsuario = (idCurso, idUsuario) => {
     let lista = JSON.stringify(listaCursosXUsuarios);
     fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
         if (err) throw (err);
-        return true
+        console.log('Archivo creado con éxito')
     });
 }
 
