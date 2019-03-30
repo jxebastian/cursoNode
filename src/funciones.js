@@ -169,6 +169,40 @@ const eliminarCursoXUsuario = (idCurso, idUsuario) => {
 }
 
 
+const crearCurso = (curso) => {
+    obtenerCursos()
+    let curse = {
+        id: curso.id,
+        nombre: curso.nombre,
+        descripcion: curso.descripcion,
+        valor: curso.valor,
+        modalidad: curso.modalidad,
+        intensidad: curso.intensidad,
+        estado: 'disponible'
+    };
+    listaCursos.push(curse);
+    let datos = JSON.stringify(listaCursos);
+    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
+        if(err) throw (err);
+        console.log('Archivo creado con éxito')
+    });
+}
+
+const registrarCurso = (curso) =>{
+    obtenerCursos()
+    let existe = listaCursos.find(curse => curse.id == curso.id)
+    if (!existe && curso.id != "undefined"){
+        crearCurso(curso);
+        text = "Curso con identificacion: " + curso.id + " ha sido creado satisfactoriamente"
+        return true
+    } else if (curso.id != undefined) {
+        text = 'El curso con id ' + curso.id + ' ya está registrado, por favor ingrese otra identificacion'
+        return false
+    } else {
+        return false
+    }
+}
+
 module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
@@ -181,4 +215,7 @@ module.exports = {
     obtenerCursosUsuario,
     eliminarCursoXUsuario,
     obtenerUsuariosXcurso
+    obtenerCursos,
+    crearCurso,
+    registrarCurso
 }

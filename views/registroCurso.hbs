@@ -1,0 +1,46 @@
+{{>header}}
+<div class="container">
+
+
+	<h2>Registro de Curso</h2>
+	{{#if datos}}
+	        {{#if creado}}
+	            <div class="alert alert-success" role="alert">
+	                Curso creado satisfactoriamente!!
+	            </div>
+	        {{else}}
+	            <div class="alert alert-danger" role="alert">
+	                El curso ya ha sido creado, por favor ingrese otra identificación(ID).
+	            </div>
+	        {{/if}}
+	{{/if}}
+	<form class="regForm"action="" method="POST">
+		<p class="pclass">
+			<label for="idlabel">ID               </label><br>
+			<input id= "idlabel" type="number" name="id" required>
+		</p>	
+		<p class="pclass">
+			<label for="nomlabel">Nombre del curso</label>
+			<input id="nomlabel"type="text" name="nombre" required>
+		</p>
+		<p class="pclass">
+			<label for="deslabel">Descripcion     </label>
+			<input id="deslabel"type="text" name="descripcion" required>
+		</p>
+		<p class="pclass">
+			<label for="vallabel">Valor           </label><br>
+			<input id="vallabel"type="number" name="valor" required>
+		</p>
+		<label>Seleccionar modalidad :
+		    <select class="pclass" id="modlabel" name="modalidad" required>
+		      <option value="presencial">Presencial</option>
+		      <option value="virtual">Virtual</option>
+		    </select>
+		 </label>
+		<p class="pclass">
+			<label for="intlabel">Intensidad      </label>
+			<input id="intlabel"type="number" name="intensidad" required>
+		</p>
+		<button>Registrar</button>
+	</form>
+</div>
