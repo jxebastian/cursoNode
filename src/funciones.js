@@ -39,7 +39,7 @@ const guardarUsuarios = () => {
 
 const obtenerCursos = () => {
     try {
-        listaCursos = require('./cursos.json');
+        listaCursos = require('./cursosPruebaFelipe.json');
     } catch (error) {
         listaCursos = [];
     }
@@ -88,7 +88,7 @@ const crearCurso = (curso) => {
     };
     listaCursos.push(curse);
     let datos = JSON.stringify(listaCursos);
-    fs.writeFile('./src/cursos.json', datos, (err) => {
+    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
         if(err) throw (err);
         console.log('Archivo creado con éxito')
     });
