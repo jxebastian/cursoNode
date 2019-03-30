@@ -76,9 +76,8 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
     let usuario = funciones.obtenerUsuario(req.params.idUser);
     let cursos = funciones.obtenerCursos()
     let curso = cursos.find(curso => curso.id == req.params.idCurso)
-    let lista = [curso]
+    let lista = [curso] 
     res.render('dar-baja',{
-      datos: false,
       eliminado: false,
       usuario: usuario,
       curso: curso,
@@ -90,10 +89,9 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
     let usuario = funciones.obtenerUsuario(req.params.idUser);
     let cursos = funciones.obtenerCursos()
     let curso = cursos.find(curso => curso.id == req.params.idCurso)
-    let eliminado = funciones.eliminarCursoXUsuario(curso.id,usuario.identifion)
+    funciones.eliminarCursoXUsuario(curso.id,usuario.identifion)
     res.render('dar-baja',{
-      datos: true,
-      eliminado: eliminado,
+      eliminado: true,
       usuario: usuario,
       curso: curso,
       lista: []
