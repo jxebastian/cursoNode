@@ -1,7 +1,7 @@
 const hbs = require('hbs');
 const funciones = require('./funciones');
 
-const listarEstudiantes = (estudiantes) =>{
+const listarEstudiantes = (estudiantes, curso) =>{
   let texto = "";
   if (estudiantes.length == 0) {
     texto = "No hay estudiantes matriculados en este curso";
@@ -13,6 +13,7 @@ const listarEstudiantes = (estudiantes) =>{
                       <th scope="col">Nombre</th>
                       <th scope="col">Telefono</th>
                       <th scope="col">Correo</th>
+                      <th scope="col"></th>
                     </tr>
                   </thead>
                   <tbody>`;
@@ -23,6 +24,7 @@ const listarEstudiantes = (estudiantes) =>{
                         <td>${estudiante.nombre}</td>
                         <td>${estudiante.telefono}</td>
                         <td>${estudiante.correo}</td>
+                        <td><a href="/desmatricular/${curso}-${estudiante.identificacion}" class="btn btn-danger">Desmatricular</a></td>
                       </tr>`;
       i = i + 1;
     });
@@ -38,8 +40,8 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
     let cabecera = curso.nombre + "<br>" +
                     curso.descripcion + "<br>" +
                     curso.valor + " pesos.";
-    let contenido = "<b> Descripción: </b> " + curso.descripcion + "<br>" +
-                    "<b> Modalidad: </b> " + curso.modalidad + "<br>" +
+    let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
+                    "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
                     "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
                     "<b> Valor: </b> " + curso.valor + " pesos.";
     texto = texto +
@@ -71,13 +73,13 @@ hbs.registerHelper('listarCursosCoordinador', (cursos) => {
                     curso.descripcion + "<br>" +
                     curso.valor + " pesos.";
     let estudiantes = funciones.obtenerUsuariosXcurso(curso.id);
-    let contenido = "<b> Descripción: </b> " + curso.descripcion + "<br>" +
-                    "<b> Modalidad: </b> " + curso.modalidad + "<br>" +
+    let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
+                    "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
                     "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
-                    "<b> Valor: </b> " + curso.valor + " pesos <br>" +
+                    "<b> Valor: </b> " + curso.valor + " pesos. <br>" +
                     "<b> Estado: </b> " + curso.estado + ". <br>" +
                     "<button type='button' class='btn btn-primary' name='Cambiar estado'>Cambiar estado</button> <br><br>" +
-                    listarEstudiantes(estudiantes);
+                    listarEstudiantes(estudiantes, curso.id);
     texto = texto +
             `<div class="card">
               <div class="card-header" id="heading${i}">

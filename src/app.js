@@ -214,7 +214,8 @@ app.route('/cambiar-rol/:id')
       coordinador: session.coordinador,
       aspirante: session.aspirante
     })
-  })
+  });
+
 app.get('/cursos', (req, res) => {
   let session = JSON.parse(localStorage.getItem('session'));
   let cursos = funciones.obtenerCursos();
@@ -266,7 +267,39 @@ app.route('/inscribir-curso')
       coordinador: session.coordinador,
       aspirante: session.aspirante
     })
-  })
+  });
+
+  app.route('/desmatricular/:idCurso'+'-'+':idUser')
+    .get((req,res) => {
+      let session = JSON.parse(localStorage.getItem('session'));
+      let usuario = funciones.obtenerUsuario(req.params.idUser);
+      let cursos = funciones.obtenerCursos()
+      let curso = cursos.find(curso => curso.id == req.params.idCurso)
+      let lista = [curso];
+      res.render('desmatricular',{
+        eliminado: false,
+        usuario: usuario,
+        curso: curso,
+        lista: lista,
+        coordinador: session.coordinador,
+        aspirante: session.aspirante
+      })
+    })
+    .post((req,res) => {
+      let session = JSON.parse(localStorage.getItem('session'));
+      let usuario = funciones.obtenerUsuario(req.params.idUser);
+      let cursos = funciones.obtenerCursos()
+      let curso = cursos.find(curso => curso.id == req.params.idCurso)
+      funciones.eliminarCursoXUsuario(curso.id,usuario.identifion)
+      res.render('desmatricular',{
+        eliminado: true,
+        usuario: usuario,
+        curso: curso,
+        lista: [],
+        coordinador: session.coordinador,
+        aspirante: session.aspirante
+      })
+    })
 
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
