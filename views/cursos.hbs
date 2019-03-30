@@ -1,6 +1,11 @@
 {{>header}}
 <div class="container">
-    {{{listarCursos lista}}}
+  {{#if aspirante}}
+    {{{listarCursosInteresado cursos}}}
+  {{/if}}
+  {{#if coordinador}}
+    {{{listarCursosCoordinador cursos}}}
+  {{/if}}
 </div>
 
 {{>footer}}

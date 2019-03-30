@@ -51,7 +51,7 @@ app.route('/')
       aspirante: aspirante,
       coordinador: coordinador
     }
-    localStorage.setItem('session', JSON.stringify(datos));  
+    localStorage.setItem('session', JSON.stringify(datos));
     if (existe){
       res.render('login', {
         existe
@@ -131,7 +131,7 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
     let usuario = funciones.obtenerUsuario(req.params.idUser);
     let cursos = funciones.obtenerCursos()
     let curso = cursos.find(curso => curso.id == req.params.idCurso)
-    let lista = [curso] 
+    let lista = [curso]
     res.render('dar-baja',{
       eliminado: false,
       usuario: usuario,
@@ -216,13 +216,18 @@ app.route('/cambiar-rol/:id')
     })
   })
 app.get('/cursos', (req, res) => {
-  let session = JSON.parse(localStorage.getItem('session')); 
+  let session = JSON.parse(localStorage.getItem('session'));
   let cursos = funciones.obtenerCursos();
-  let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
+  let cursosMostrar = [];
+  if (session.coordinador) {
+    cursosMostrar = cursos;
+  } else {
+    cursosMostrar = cursos.filter(curso => curso.estado == "disponible");
+  };
   res.render('cursos', {
-    lista: cursosDisponibles,
     coordinador: session.coordinador,
-    aspirante: session.aspirante
+    aspirante: session.aspirante,
+    cursos: cursosMostrar
   });
 });
 
@@ -266,4 +271,3 @@ app.route('/inscribir-curso')
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
 });
-

@@ -77,7 +77,7 @@ const obtenerCursosDisponibles = () => {
 const obtenerCursosUsuario = (usuario) => {
     obtenerCursosXUsuarios();
     obtenerCursos();
-    listaCursosResultante = []
+    listaCursosResultante = [];
     let cursosEncontrados = listaCursosXUsuarios.filter(cursoE => cursoE.identificacionUsuario == usuario.identificacion);
     cursosEncontrados.forEach(curso => {
         let match = listaCursos.find(curso2 => curso2.id== curso.idCurso );
@@ -87,6 +87,20 @@ const obtenerCursosUsuario = (usuario) => {
     })
     return listaCursosResultante
 }
+
+const obtenerUsuariosXcurso = (curso) => {
+    obtenerCursosXUsuarios();
+    obtenerUsuarios();
+    listaUsuariosResultante = [];
+    let usuariosEncontrados = listaCursosXUsuarios.filter(cursoXusuario => cursoXusuario.idCurso == curso);
+    usuariosEncontrados.forEach(usuario => {
+        let match = listaUsuarios.find(user => user.identificacion == usuario.identificacionUsuario);
+        if (match) {
+            listaUsuariosResultante.push(match);
+        };
+    });
+    return listaUsuariosResultante;
+};
 
 const registrarUsuario = (usuario) => {
     obtenerUsuarios()
@@ -121,7 +135,7 @@ const crear = (usuario) => {
 
 const inscribirCurso = (datos) => {
     console.log(datos);
-    
+
     obtenerCursosXUsuarios();
     let existe = listaCursosXUsuarios.find(item => item.idCurso == datos.idCurso &&
         item.identificacionUsuario == datos.identificacion);
@@ -165,5 +179,6 @@ module.exports = {
     inscribirCurso,
     registrarUsuario,
     obtenerCursosUsuario,
-    eliminarCursoXUsuario
+    eliminarCursoXUsuario,
+    obtenerUsuariosXcurso
 }
