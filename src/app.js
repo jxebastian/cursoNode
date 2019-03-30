@@ -4,15 +4,13 @@ const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const funciones = require('./funciones');
+const LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 require('./helpers');
 
 let login;
-let administrador;
+let coordinador;
 let aspirante;
-
-let session = funciones.obtenerSession();
-//console.log(session);
-
 
 const directorioPublico = path.join(__dirname, '../public');
 const directorioPartials = path.join(__dirname, '../partials');
@@ -35,15 +33,15 @@ app.route('/')
   })
   .post((req, res) =>{
     aspirante = false;
-    administrador = false;
+    coordinador = false;
     let usuario = funciones.obtenerUsuario(req.body.identificacion);
     let existe = false;
     if(!usuario){
       existe = true;
     }else{
       login = usuario.rol;
-      if(login == 'Administrador'){
-        administrador = true;
+      if(login == 'Coordinador'){
+        coordinador = true;
       } else if(login == 'Aspirante'){
         aspirante = true;
       }
@@ -51,26 +49,26 @@ app.route('/')
     datos = {
       login: login,
       aspirante: aspirante,
-      administrador: administrador
+      coordinador: coordinador
     }
-    funciones.guardarSession(datos);
+    localStorage.setItem('session', JSON.stringify(datos));  
     if (existe){
       res.render('login', {
         existe
       });
     }else{
-      session = funciones.obtenerSession();
       res.render('index', {
         existe,
         aspirante: aspirante,
-        administrador: administrador
+        coordinador: coordinador
       });
     }
   })
 
 app.get('/index', (req, res) =>{
+  let session = JSON.parse(localStorage.getItem('session'));
   res.render('index', {
-    administrador: session.administrador,
+    coordinador: session.coordinador,
     aspirante: session.aspirante
   });
 });
@@ -98,13 +96,15 @@ app.route('/registro')
 
 app.route('/darme-baja')
   .get((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('darme-baja',{
       datos: false,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
   .post((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     let identificacion = parseInt(req.body.identificacion);
     let existe = funciones.obtenerUsuario(identificacion);
     if(existe){
@@ -120,13 +120,14 @@ app.route('/darme-baja')
       idIngresado: identificacion,
       lista: cursosUsuario,
       existe: existe,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
 
 app.route('/dar-baja/:idUser'+'-'+':idCurso')
   .get((req,res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     let usuario = funciones.obtenerUsuario(req.params.idUser);
     let cursos = funciones.obtenerCursos()
     let curso = cursos.find(curso => curso.id == req.params.idCurso)
@@ -136,12 +137,12 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
       usuario: usuario,
       curso: curso,
       lista: lista,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
   .post((req,res) => {
-    console.log('post')
+    let session = JSON.parse(localStorage.getItem('session'));
     let usuario = funciones.obtenerUsuario(req.params.idUser);
     let cursos = funciones.obtenerCursos()
     let curso = cursos.find(curso => curso.id == req.params.idCurso)
@@ -151,83 +152,87 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
       usuario: usuario,
       curso: curso,
       lista: [],
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
 
 app.get('/roles-usuarios', (req, res) => {
+  let session = JSON.parse(localStorage.getItem('session'));
   let lista = funciones.obtenerUsuarios();
-  lista = lista.filter(usuario => usuario.rol != 'Administrador');
+  lista = lista.filter(usuario => usuario.rol != 'Coordinador');
   res.render('roles-usuarios', {
     lista: lista,
-    administrador: session.administrador,
+    coordinador: session.coordinador,
     aspirante: session.aspirante
   });
-
 });
 
 app.route('/editar-usuario/:id')
   .get((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('editar-usuario', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: false,
       actualizado: false,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
   .post((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     let actualizado = false;
     actualizado = funciones.actualizarUsuario(req.body);
     res.render('editar-usuario', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: true,
       actualizado: actualizado,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
 
 app.route('/cambiar-rol/:id')
   .get((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('cambiar-rol', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: false,
       actualizado: false,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
   .post((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     let actualizado = false;
     actualizado = funciones.cambiarRol(req.body);
     res.render('cambiar-rol', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: true,
       actualizado: actualizado,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
 app.get('/cursos', (req, res) => {
+  let session = JSON.parse(localStorage.getItem('session')); 
   let cursos = funciones.obtenerCursos();
   let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
   res.render('cursos', {
     lista: cursosDisponibles,
-    administrador: session.administrador,
+    coordinador: session.coordinador,
     aspirante: session.aspirante
   });
 });
 
 app.route('/inscribir-curso')
   .get((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('inscribir-curso', {
       cursos: funciones.obtenerCursosDisponibles(),
       datos: false,
-      aspirante: aspirante,
-      administrador: administrador,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     });
   })
@@ -246,20 +251,19 @@ app.route('/inscribir-curso')
         exito = funciones.inscribirCurso(req.body);
       }
     }
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('inscribir-curso', {
       cursos: funciones.obtenerCursosDisponibles(),
       datos: true,
       usuario: usuario,
       exito: exito,
       selecione: selecione,
-      administrador: session.administrador,
+      coordinador: session.coordinador,
       aspirante: session.aspirante
     })
   })
 
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
-
 });
 
-module.exports = {app}
