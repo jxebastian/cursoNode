@@ -100,12 +100,12 @@ const registrarCurso = (curso) =>{
     if (!existe && curso.id != "undefined"){
         crearCurso(curso);
         text = "Curso con identificacion: " + curso.id + " ha sido creado satisfactoriamente"
-        return text
+        return true
     } else if (curso.id != undefined) {
         text = 'El curso con id ' + curso.id + ' ya está registrado, por favor ingrese otra identificacion'
-        return text
+        return false
     } else {
-        return ""
+        return false
     }
 }
 

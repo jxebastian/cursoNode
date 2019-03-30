@@ -61,12 +61,30 @@ app.get('/cursos', (req, res) => {
   });
 });
 
-app.get('/registroCurso', (req, res) => {
-  res.render('registroCurso');
-  text = funciones.registrarCurso(req.query);
-  console.log(text)
-});
+app.route('/registroCurso')
+  .get((req, res) => {
+    res.render('registroCurso',{
+      datos:false,
+      datos:false
+    });
+  })
+  .post((req, res) => {
+    text = funciones.registrarCurso(req.body);
+    console.log(text)
+    if(text){
+      res.render('registroCurso',{
+      creado: true,
+      datos: true,
+    });
+    } else{
+      res.render('registroCurso',{
+      datos:true,
+      creado: false
+    });
+    }
+  });
 
+  
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');
 
