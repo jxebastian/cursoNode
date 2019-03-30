@@ -154,6 +154,22 @@ const eliminarCursoXUsuario = (idCurso, idUsuario) => {
     });
 }
 
+const guardarSession = (datos) => {
+    datos = {
+        login: datos.rol,
+        administrador: datos.administrador,
+        aspirante: datos.aspirante
+    }
+    datos = JSON.stringify(datos);
+    fs.writeFile('./src/session.json', datos, (err) => {
+        if (err) throw (err);
+    });
+}
+
+const obtenerSession = () =>{
+    return require('./session.json');
+}
+
 module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
@@ -164,5 +180,7 @@ module.exports = {
     inscribirCurso,
     registrarUsuario,
     obtenerCursosUsuario,
-    eliminarCursoXUsuario
+    eliminarCursoXUsuario, 
+    guardarSession,
+    obtenerSession
 }

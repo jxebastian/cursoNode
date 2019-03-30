@@ -6,6 +6,14 @@ const bodyParser = require('body-parser');
 const funciones = require('./funciones');
 require('./helpers');
 
+let login;
+let administrador;
+let aspirante;
+
+let session = funciones.obtenerSession();
+//console.log(session);
+
+
 const directorioPublico = path.join(__dirname, '../public');
 const directorioPartials = path.join(__dirname, '../partials');
 app.use(express.static(directorioPublico));
@@ -21,8 +29,50 @@ app.use('/js', express.static('../src'));
 
 app.set('view engine', 'hbs');
 
-app.get('/', (req, res) => {
-  res.render('index');
+app.route('/')
+  .get((req, res) =>{
+    res.render('login');
+  })
+  .post((req, res) =>{
+    aspirante = false;
+    administrador = false;
+    let usuario = funciones.obtenerUsuario(req.body.identificacion);
+    let existe = false;
+    if(!usuario){
+      existe = true;
+    }else{
+      login = usuario.rol;
+      if(login == 'Administrador'){
+        administrador = true;
+      } else if(login == 'Aspirante'){
+        aspirante = true;
+      }
+    }
+    datos = {
+      login: login,
+      aspirante: aspirante,
+      administrador: administrador
+    }
+    funciones.guardarSession(datos);
+    if (existe){
+      res.render('login', {
+        existe
+      });
+    }else{
+      session = funciones.obtenerSession();
+      res.render('index', {
+        existe,
+        aspirante: aspirante,
+        administrador: administrador
+      });
+    }
+  })
+
+app.get('/index', (req, res) =>{
+  res.render('index', {
+    administrador: session.administrador,
+    aspirante: session.aspirante
+  });
 });
 
 app.route('/registro')
@@ -49,7 +99,9 @@ app.route('/registro')
 app.route('/darme-baja')
   .get((req, res) => {
     res.render('darme-baja',{
-      datos: false
+      datos: false,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
   .post((req, res) => {
@@ -67,7 +119,9 @@ app.route('/darme-baja')
       datos:true,
       idIngresado: identificacion,
       lista: cursosUsuario,
-      existe: existe
+      existe: existe,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
 
@@ -82,7 +136,9 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
       eliminado: false,
       usuario: usuario,
       curso: curso,
-      lista: lista
+      lista: lista,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
   .post((req,res) => {
@@ -96,13 +152,19 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
       eliminado: eliminado,
       usuario: usuario,
       curso: curso,
-      lista: []
+      lista: [],
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
 
 app.get('/roles-usuarios', (req, res) => {
+  let lista = funciones.obtenerUsuarios();
+  lista = lista.filter(usuario => usuario.rol != 'Administrador');
   res.render('roles-usuarios', {
-    lista: funciones.obtenerUsuarios()
+    lista: lista,
+    administrador: session.administrador,
+    aspirante: session.aspirante
   });
 
 });
@@ -112,7 +174,9 @@ app.route('/editar-usuario/:id')
     res.render('editar-usuario', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: false,
-      actualizado: false
+      actualizado: false,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
   .post((req, res) => {
@@ -121,7 +185,9 @@ app.route('/editar-usuario/:id')
     res.render('editar-usuario', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: true,
-      actualizado: actualizado
+      actualizado: actualizado,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
 
@@ -130,7 +196,9 @@ app.route('/cambiar-rol/:id')
     res.render('cambiar-rol', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: false,
-      actualizado: false
+      actualizado: false,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
   .post((req, res) => {
@@ -139,14 +207,18 @@ app.route('/cambiar-rol/:id')
     res.render('cambiar-rol', {
       usuario: funciones.obtenerUsuario(req.params.id),
       datos: true,
-      actualizado: actualizado
+      actualizado: actualizado,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
 app.get('/cursos', (req, res) => {
   let cursos = funciones.obtenerCursos();
   let cursosDisponibles = cursos.filter(curso => curso.estado == "disponible");
   res.render('cursos', {
-    lista: cursosDisponibles
+    lista: cursosDisponibles,
+    administrador: session.administrador,
+    aspirante: session.aspirante
   });
 });
 
@@ -154,7 +226,11 @@ app.route('/inscribir-curso')
   .get((req, res) => {
     res.render('inscribir-curso', {
       cursos: funciones.obtenerCursosDisponibles(),
-      datos: false
+      datos: false,
+      aspirante: aspirante,
+      administrador: administrador,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     });
   })
   .post((req, res) => {
@@ -177,7 +253,9 @@ app.route('/inscribir-curso')
       datos: true,
       usuario: usuario,
       exito: exito,
-      selecione: selecione
+      selecione: selecione,
+      administrador: session.administrador,
+      aspirante: session.aspirante
     })
   })
 
