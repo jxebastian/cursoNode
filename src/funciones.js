@@ -74,14 +74,14 @@ const obtenerCursosDisponibles = () => {
     return listaCursos.filter(curso => curso.estado == 'disponible');
 }
 
-const obtenerCursosUsuario = (usuario) =>{
+const obtenerCursosUsuario = (usuario) => {
     obtenerCursosXUsuarios();
     obtenerCursos();
     listaCursosResultante = []
     let cursosEncontrados = listaCursosXUsuarios.filter(cursoE => cursoE.identificacionUsuario == usuario.identificacion);
     cursosEncontrados.forEach(curso => {
         let match = listaCursos.find(curso2 => curso2.idCurso == curso.id);
-        if(match){
+        if (match) {
             listaCursosResultante.push(match)
         }
     })
@@ -120,23 +120,33 @@ const crear = (usuario) => {
 }
 
 const inscribirCurso = (datos) => {
+    console.log(datos);
+    
     obtenerCursosXUsuarios();
-    let nuevo = {
-        idCurso: datos.idCurso,
-        identificacionUsuario: datos.identificacion
+    let existe = listaCursosXUsuarios.find(item => item.idCurso == datos.idCurso &&
+        item.identificacionUsuario == datos.identificacion);
+    if (!existe) {
+        let nuevo = {
+            idCurso: datos.idCurso,
+            identificacionUsuario: datos.identificacion
+        }
+        listaCursosXUsuarios.push(nuevo);
+        let lista = JSON.stringify(listaCursosXUsuarios);
+        fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
+            if (err) throw (err);
+            console.log('Archivo creado con éxito')
+        });
+        return true;
+    } else {
+        return false;
     }
-    listaCursosXUsuarios.push(nuevo);
-    let lista = JSON.stringify(listaCursosXUsuarios);
-    fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
-        if (err) throw (err);
-        console.log('Archivo creado con éxito')
-    });
+
 }
 
-const eliminarCursoXUsuario = (idCurso,idUsuario) =>{
+const eliminarCursoXUsuario = (idCurso, idUsuario) => {
     obtenerCursosXUsuarios();
     let element = listaCursosXUsuarios.find(curso => (curso.idCurso == idCurso) && (curso.identificacionUsuario == idUsuario))
-    listaCursosXUsuarios.splice(listaCursosXUsuarios.indexOf(element),1);
+    listaCursosXUsuarios.splice(listaCursosXUsuarios.indexOf(element), 1);
     let lista = JSON.stringify(listaCursosXUsuarios);
     fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
         if (err) throw (err);

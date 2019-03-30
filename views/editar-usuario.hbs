@@ -11,30 +11,31 @@
             </div>
         {{/if}}
     {{/if}}
-    <div class="form">
-        <form action="" method="post">
-            <div class="form-group">
-                <div class="">
+    <div class="row justify-content-center">
+        <div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
+            <h3>Actualizar usuario</h3>
+            <form action="" method="post" class="regForm">
+                <div class="form-group">
                     <label for="nombre">Identifición</label>
                     <input type="numbre" class="form-control" id="identificacion" name="identificacion"
-                        value="{{usuario.identificacion}}" readonly>
+                            value="{{usuario.identificacion}}" readonly>
                 </div>
-                <div class="">
+                <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{usuario.nombre}}">
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{usuario.nombre}}" required>
                 </div>
-                <div class="">
+                <div class="form-group">
                     <label for="correo">Correo</label>
-                    <input type="email" class="form-control" id="correo" name="correo" value="{{usuario.correo}}">
+                    <input type="email" class="form-control" id="correo" name="correo" value="{{usuario.correo}}" required>
                 </div>
-                <div class="">
+                <div class="form-group">
                     <label for="telefono">Telefono</label>
-                    <input type="number" class="form-control" id="telefono" name="telefono" value="{{usuario.telefono}}">
+                    <input type="number" class="form-control" id="telefono" name="telefono" value="{{usuario.telefono}}" required>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary">Actualizar</button>
-            <a href="/roles-usuarios" class="btn btn-primary">Regresar</a>
-        </form>
+                <a href="/roles-usuarios" class="btn btn-primary">Regresar</a>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </form>
+        </div>
     </div>
 </div>
 {{>footer}}

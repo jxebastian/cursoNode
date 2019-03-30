@@ -100,7 +100,6 @@ app.route('/dar-baja/:idUser'+'-'+':idCurso')
     })
   })
 
-
 app.get('/roles-usuarios', (req, res) => {
   res.render('roles-usuarios', {
     lista: funciones.obtenerUsuarios()
@@ -153,15 +152,32 @@ app.get('/cursos', (req, res) => {
 
 app.route('/inscribir-curso')
   .get((req, res) => {
-    let cursos = funciones.obtenerCursosDisponibles();
     res.render('inscribir-curso', {
-      cursos: cursos
+      cursos: funciones.obtenerCursosDisponibles(),
+      datos: false
     });
   })
   .post((req, res) => {
-    funciones.inscribirCurso(req.body);
+    let existe = funciones.obtenerUsuario(req.body.identificacion);
+    let usuario;
+    let exito;
+    let selecione;
+    if (req.body.idCurso == 'selecione'){
+      selecione = true;
+    }else {
+      if (!existe){
+        usuario = true;
+      }else{
+        usuario = false;
+        exito = funciones.inscribirCurso(req.body);
+      }
+    }
     res.render('inscribir-curso', {
-      cursos: funciones.obtenerCursosDisponibles()
+      cursos: funciones.obtenerCursosDisponibles(),
+      datos: true,
+      usuario: usuario,
+      exito: exito,
+      selecione: selecione
     })
   })
 

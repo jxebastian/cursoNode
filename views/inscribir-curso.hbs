@@ -1,24 +1,53 @@
 {{>header}}
 <div class="container">
-    <form action="" method="post">
-        <div class="form-gruop">
-            <div>
-                <label for="identificacion">Identificación</label>
-                <input type="number" class="form-control" name="identificacion" required>
+    {{#if datos}}
+        {{#if exito}}
+            <div class="alert alert-success" role="alert">
+                Registrado en el curso sitifatoriamente
             </div>
-            <div>
-                <label for="idCurso">Cursos</label>
-                <select name="idCurso" class="custom-select">
-                    <option selected value="selecione">Selecione curso</option>
-                    {{#each cursos as |curso|}}
-                        <option value="{{curso.id}}">{{curso.nombre}}</option>
-                    {{/each}}
-                </select>
-            </div>
-            <br>
-            <button type="submit" class="btn btn-primary">Inscribirse</button>
+        {{else}}
+            {{#if usuario}}
+                <div class="alert alert-danger" role="alert">
+                    El aspirante no esta registrado
+                </div>
+            {{else}}
+                {{#if selecione}}
+                    <div class="alert alert-danger" role="alert">
+                        Seleccione un curso
+                    </div>
+                {{else}}
+                    <div class="alert alert-danger" role="alert">
+                        El aspirante ya se encuentra registrado
+                    </div>
+                {{/if}}
+            {{/if}}
+        {{/if}}
+    {{/if}}
+    <div class="row justify-content-center">
+        <div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
+            <h3>Inscribirse a un curso</h3>
+            <form action="" method="post" class="regForm">
+                <div class="form-gruop">
+                    <div>
+                        <label for="identificacion">Identificación</label>
+                        <input type="number" class="form-control" name="identificacion" required>
+                    </div>
+                    <div>
+                        <label for="idCurso">Cursos</label>
+                        <select name="idCurso" class="custom-select" required>
+                            <option selected value="selecione">Selecione curso</option>
+                            {{#each cursos as |curso|}}
+                                <option value="{{curso.id}}">{{curso.nombre}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <br>
+                    <a href="/" class="btn btn-primary">Regresar</a>
+                    <button type="submit" class="btn btn-primary">Inscribirse</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
 {{>footer}}
