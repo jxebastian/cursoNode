@@ -24,9 +24,10 @@
 					<label for="nomlabel">Nombre del curso</label>
 					<input id="nomlabel"type="text" name="nombre" class="form-control"  placeholder="Ingrese un nombre para el curso" required>
 				</div>
-				<div class="form-group">
-					<label for="deslabel">Descripcion</label>
-					<input id="deslabel"type="text" name="descripcion" class="form-control"  placeholder="Ingrese una descripcion del curso" required>
+				<div class="md-form">
+					<label for="deslabel">Descripción</label>
+					<i class="fas fa-pencil-alt prefix"></i>
+					<textarea id="destext" class="md-textarea form-control" rows="3" name="descripcion" required></textarea>
 				</div>
 				<div class="form-group">
 					<label for="vallabel">Valor</label>
@@ -45,7 +46,7 @@
 					<input id="intlabel"type="number" name="intensidad" class="form-control"  placeholder="Ingrese la intendad en horas" required>
 				</div>
 				<button type="submit" class="btn btn-primary col-sm-2">Registrar</button>
-				<a href="javascript:history.back(-1);" class="btn btn-secondary col-sm-2">Regresar</a>
+				<a href="/index" class="btn btn-secondary col-sm-2">Regresar</a>
 			</form>
 		</div>
 	</div>
