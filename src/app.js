@@ -219,6 +219,7 @@ app.route('/cambiar-rol/:id')
 app.get('/cursos', (req, res) => {
   let session = JSON.parse(localStorage.getItem('session'));
   let cursos = funciones.obtenerCursos();
+  console.log(cursos)
   let cursosMostrar = [];
   if (session.coordinador) {
     cursosMostrar = cursos;
@@ -331,7 +332,33 @@ app.route('/registroCurso')
     });
     }
   });
-
+app.route('/estado/:idCurso')
+    .get((req,res) => {
+      let session = JSON.parse(localStorage.getItem('session'));
+      let cursos = funciones.obtenerCursos()
+      let curso = cursos.find(curso => curso.id == req.params.idCurso)
+      let lista = [curso];
+      res.render('estado',{
+        cerrado: false,
+        curso: curso,
+        lista: lista,
+        coordinador: session.coordinador,
+        aspirante: session.aspirante
+      })
+    })
+    .post((req,res) => {
+      let session = JSON.parse(localStorage.getItem('session'));
+      let cursos = funciones.obtenerCursos()
+      let curso = cursos.find(curso => curso.id == req.params.idCurso)
+      funciones.cambiarEstadoCurso(curso)
+      res.render('estado',{
+        cerrado: true,
+        curso: curso,
+        lista: [],
+        coordinador: session.coordinador,
+        aspirante: session.aspirante
+      })
+    })
   
 app.listen(3000, () => {
   console.log('Escuchando por el puerto 3000');

@@ -203,6 +203,26 @@ const registrarCurso = (curso) =>{
     }
 }
 
+const cambiarEstadoCurso = (curso) =>{
+    obtenerCursos()
+    listaCursos = listaCursos.filter(curse => curse.id != curso.id);
+    let cur = {
+        id: curso.id,
+        nombre: curso.nombre,
+        descripcion: curso.descripcion,
+        valor: curso.valor,
+        modalidad: curso.modalidad,
+        intensidad: curso.intensidad,
+        estado: 'cerrado'
+    };
+    listaCursos.push(cur);
+    let datos = JSON.stringify(listaCursos);
+    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
+        if(err) throw (err);
+        console.log('Archivo creado con éxito')
+    }); 
+}
+
 module.exports = {
     obtenerUsuarios,
     obtenerUsuario,
@@ -215,7 +235,7 @@ module.exports = {
     obtenerCursosUsuario,
     eliminarCursoXUsuario,
     obtenerUsuariosXcurso,
-    obtenerCursos,
     crearCurso,
-    registrarCurso
+    registrarCurso,
+    cambiarEstadoCurso
 }

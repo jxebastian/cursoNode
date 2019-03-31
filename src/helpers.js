@@ -78,7 +78,7 @@ hbs.registerHelper('listarCursosCoordinador', (cursos) => {
                     "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
                     "<b> Valor: </b> " + curso.valor + " pesos. <br>" +
                     "<b> Estado: </b> " + curso.estado + ". <br>" +
-                    "<button type='button' class='btn btn-primary' name='Cambiar estado'>Cambiar estado</button> <br><br>" +
+                    `<a href= "/estado/${curso.id}" class="btn btn-danger" >Cambiar estado</a> <br><br>` +
                     listarEstudiantes(estudiantes, curso.id);
     texto = texto +
             `<div class="card">
