@@ -1,7 +1,6 @@
 {{>header}}
 <div class="container">
 
-
 	<h2>Registro de Curso</h2>
 	{{#if datos}}
 	        {{#if creado}}
@@ -14,33 +13,40 @@
 	            </div>
 	        {{/if}}
 	{{/if}}
-	<form class="regForm"action="" method="POST">
-		<p class="pclass">
-			<label for="idlabel">ID               </label><br>
-			<input id= "idlabel" type="number" name="id" required>
-		</p>	
-		<p class="pclass">
-			<label for="nomlabel">Nombre del curso</label>
-			<input id="nomlabel"type="text" name="nombre" required>
-		</p>
-		<p class="pclass">
-			<label for="deslabel">Descripcion     </label>
-			<input id="deslabel"type="text" name="descripcion" required>
-		</p>
-		<p class="pclass">
-			<label for="vallabel">Valor           </label><br>
-			<input id="vallabel"type="number" name="valor" required>
-		</p>
-		<label>Seleccionar modalidad :
-		    <select class="pclass" id="modlabel" name="modalidad" required>
-		      <option value="presencial">Presencial</option>
-		      <option value="virtual">Virtual</option>
-		    </select>
-		 </label>
-		<p class="pclass">
-			<label for="intlabel">Intensidad      </label>
-			<input id="intlabel"type="number" name="intensidad" required>
-		</p>
-		<button>Registrar</button>
-	</form>
+	<div class="row justify-content-center">
+		<div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
+			<form class="regForm"action="" method="POST">
+				<div class="form-group">
+					<label for="idlabel">ID</label>
+					<input id= "idlabel" type="number" name="id" class="form-control"  placeholder="Ingrese un Id para el curso"  required>
+				</div>	
+				<div class="form-group">
+					<label for="nomlabel">Nombre del curso</label>
+					<input id="nomlabel"type="text" name="nombre" class="form-control"  placeholder="Ingrese un nombre para el curso" required>
+				</div>
+				<div class="form-group">
+					<label for="deslabel">Descripcion</label>
+					<input id="deslabel"type="text" name="descripcion" class="form-control"  placeholder="Ingrese una descripcion del curso" required>
+				</div>
+				<div class="form-group">
+					<label for="vallabel">Valor</label>
+					<input id="vallabel"type="number" name="valor" class="form-control"  placeholder="Ingrese el valor para el curso" required>
+				</div>
+				<div class="form-group">
+					<label>Seleccionar modalidad :<br><br>
+					    <select class="custom-select" id="modlabel" name="modalidad" required>
+					      <option value="presencial">Presencial</option>
+					      <option value="virtual">Virtual</option>
+					    </select>
+					 </label>
+				</div>
+				<div class="form-group">
+					<label for="intlabel">Intensidad</label>
+					<input id="intlabel"type="number" name="intensidad" class="form-control"  placeholder="Ingrese la intendad en horas" required>
+				</div>
+				<button type="submit" class="btn btn-primary col-sm-2">Registrar</button>
+				<a href="/" class="btn btn-secondary col-sm-2">Regresar</a>
+			</form>
+		</div>
+	</div>
 </div>
