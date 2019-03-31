@@ -1,1 +1,38 @@
-[{"id":"1","nombre":"Cómo conocí a mi waifu","descripcion":"en este curso se enseña como ser como el dios Kazuma y sobrevivir en un Isekai rodeado de un equipo de inútiles","valor":900000,"modalidad":"virtual","intensidad":8,"estado":"disponible"},{"id":"2","nombre":"Entrar en la zona","descripcion":"en este curso Midorima nos enseña como entrar en la zona","valor":7000,"modalidad":"presencial","intensidad":4,"estado":"disponible"},{"id":"3","nombre":"u's","descripcion":"las waifus de u's nos enseñarán a como salvar a tu colegio siendo una idol kawai","valor":120000,"modalidad":"presencial","intensidad":6,"estado":"no disponible"},{"id":"45","nombre":"android","descripcion":"hacer apps","valor":"34455","modalidad":"virtual","intensidad":"5","estado":"no disponible"}]
+[
+  {
+    "id":1,
+    "nombre":"POO",
+    "descripcion":"Programación orientada a objetos en lenguaje Java",
+    "valor":900000,
+    "modalidad":"virtual",
+    "intensidad":8,
+    "estado":"disponible"
+  },
+  {
+    "id":2,
+    "nombre":"Inglés 3",
+    "descripcion":"Curso de inglés de nivel intermedio",
+    "valor":7000,
+    "modalidad":"presencial",
+    "intensidad":4,
+    "estado":"disponible"
+  },
+  {
+    "id":3,
+    "nombre":"Habilidades blandas",
+    "descripcion":"En este curso te ayudamos a mejorar tus habilidades blandas para que consigas trabajo en el futuro",
+    "valor":120000,
+    "modalidad":"presencial",
+    "intensidad":6,
+    "estado":"no disponible"
+  },
+  {
+    "id":45,
+    "nombre":"Desarrollo de aplicaciones android",
+    "descripcion":"Aprederás a desarrollar aplicaciones para el sistema operativo Android haciendo uso de android studio",
+    "valor":"34455",
+    "modalidad":"virtual",
+    "intensidad":5,
+    "estado":"no disponible"
+  }
+]
