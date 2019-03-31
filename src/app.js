@@ -219,7 +219,6 @@ app.route('/cambiar-rol/:id')
 app.get('/cursos', (req, res) => {
   let session = JSON.parse(localStorage.getItem('session'));
   let cursos = funciones.obtenerCursos();
-  console.log(cursos)
   let cursosMostrar = [];
   if (session.coordinador) {
     cursosMostrar = cursos;
@@ -315,7 +314,6 @@ app.route('/registroCurso')
   .post((req, res) => {
     let session = JSON.parse(localStorage.getItem('session'));
     text = funciones.registrarCurso(req.body);
-    console.log(text)
     if(text){
       res.render('registroCurso',{
       coordinador: session.coordinador,
@@ -354,7 +352,6 @@ app.route('/estado/:idCurso')
       res.render('estado',{
         cerrado: true,
         curso: curso,
-        lista: [],
         coordinador: session.coordinador,
         aspirante: session.aspirante
       })

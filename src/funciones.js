@@ -51,9 +51,17 @@ const guardarUsuarios = () => {
     });
 }
 
+const guardarCursos = () => {
+    let datos = JSON.stringify(listaCursos);
+    fs.writeFile('./src/cursos.json', datos, (err) => {
+        if(err) throw (err);
+        console.log('Archivo creado con éxito')
+    });
+}
+
 const obtenerCursos = () => {
     try {
-        listaCursos = require('./cursosPruebaFelipe.json');
+        listaCursos = require('./cursos.json');
     } catch (error) {
         listaCursos = [];
     }
@@ -108,11 +116,9 @@ const registrarUsuario = (usuario) => {
     if (!existe) {
         crear(usuario);
         text = "Usuario con identificacion: " + usuario.identificacion + " ha sido creado satisfactoriamente"
-        console.log(text)
         /**/return true
     } else {
         text = 'El usuario con id ' + usuario.identificacion + ' ya está registrado, por favor ingrese otra identificacion'
-        console.log(text)
         /**/return false
     }
 }
@@ -134,8 +140,6 @@ const crear = (usuario) => {
 }
 
 const inscribirCurso = (datos) => {
-    console.log(datos);
-
     obtenerCursosXUsuarios();
     let existe = listaCursosXUsuarios.find(item => item.idCurso == datos.idCurso &&
         item.identificacionUsuario == datos.identificacion);
@@ -168,7 +172,6 @@ const eliminarCursoXUsuario = (idCurso, idUsuario) => {
     });
 }
 
-
 const crearCurso = (curso) => {
     obtenerCursos()
     let curse = {
@@ -181,11 +184,7 @@ const crearCurso = (curso) => {
         estado: 'disponible'
     };
     listaCursos.push(curse);
-    let datos = JSON.stringify(listaCursos);
-    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
-        if(err) throw (err);
-        console.log('Archivo creado con éxito')
-    });
+    guardarCursos();
 }
 
 const registrarCurso = (curso) =>{
@@ -205,22 +204,9 @@ const registrarCurso = (curso) =>{
 
 const cambiarEstadoCurso = (curso) =>{
     obtenerCursos()
-    listaCursos = listaCursos.filter(curse => curse.id != curso.id);
-    let cur = {
-        id: curso.id,
-        nombre: curso.nombre,
-        descripcion: curso.descripcion,
-        valor: curso.valor,
-        modalidad: curso.modalidad,
-        intensidad: curso.intensidad,
-        estado: 'cerrado'
-    };
-    listaCursos.push(cur);
-    let datos = JSON.stringify(listaCursos);
-    fs.writeFile('./src/cursosPruebaFelipe.json', datos, (err) => {
-        if(err) throw (err);
-        console.log('Archivo creado con éxito')
-    }); 
+    curso = listaCursos.find(curse => curse.id == curso.id);
+    curso['estado'] = 'no disponible';
+    guardarCursos();
 }
 
 module.exports = {
