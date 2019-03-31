@@ -303,21 +303,29 @@ app.route('/inscribir-curso')
 
 app.route('/registroCurso')
   .get((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     res.render('registroCurso',{
+      coordinador: session.coordinador,
+      aspirante: session.aspirante,
       datos:false,
       datos:false
     });
   })
   .post((req, res) => {
+    let session = JSON.parse(localStorage.getItem('session'));
     text = funciones.registrarCurso(req.body);
     console.log(text)
     if(text){
       res.render('registroCurso',{
+      coordinador: session.coordinador,
+      aspirante: session.aspirante,  
       creado: true,
-      datos: true,
+      datos: true
     });
     } else{
       res.render('registroCurso',{
+      coordinador: session.coordinador,
+      aspirante: session.aspirante,  
       datos:true,
       creado: false
     });
