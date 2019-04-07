@@ -4,11 +4,11 @@ var uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 const cursoXusuarioSchema = new Schema({
 	idCurso : {
-		type : String,
+		type : Number,
 		required : true
 	},
   identificacionUsuario : {
-		type : String,
+		type : Number,
 		required : true
 	}
 });

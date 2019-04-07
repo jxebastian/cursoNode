@@ -3,6 +3,10 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 const cursoSchema = new Schema({
+	id : {
+		type : Number,
+		required : true
+	},
 	nombre : {
 		type : String,
 		required : true
@@ -18,6 +22,7 @@ const cursoSchema = new Schema({
 	},
   modalidad : {
 		type : String,
+		enum: {values: ['virtual', 'presencial']},
 		required : true
 	},
 	intensidad : {
