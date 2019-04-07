@@ -18,6 +18,11 @@ const usuarioSchema = new Schema({
 		trim : true,
     default: 'Aspirante'
 	},
+  correo : {
+		type : String,
+		required : true,
+		trim : true
+	},
   telefono : {
 		type: Number,
 		required: true
