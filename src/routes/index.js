@@ -10,7 +10,7 @@ const dirPartials = path.join(__dirname, '../../template/partials');
 //modelos
 const Usuario = require('./../models/usuario');
 const Curso = require('./../models/curso');
-const CursoXUsario = require('./../models/cursoXusario');
+const CursoXUsuario = require('./../models/cursoXusuario');
 //helpers
 require('./../helpers/helpers');
 //funciones

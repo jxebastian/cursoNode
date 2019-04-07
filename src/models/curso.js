@@ -27,7 +27,7 @@ const cursoSchema = new Schema({
 	},
 	estado : {
 		type: String,
-		default: 'disponible'
+		enum: {values: ['disponible', 'no disponible']}
 	}
 });
 

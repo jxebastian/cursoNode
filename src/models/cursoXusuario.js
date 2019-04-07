@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
-const cursoXusrioSchema = new Schema({
+const cursoXusuarioSchema = new Schema({
 	idCurso : {
 		type : String,
 		required : true
@@ -15,6 +15,6 @@ const cursoXusrioSchema = new Schema({
 
 cursoXusuarioSchema.plugin(uniqueValidator);
 
-const CursoXUsario = mongoose.model('CursoXUsario', cursoXusuarioSchema);
+const CursoXUsuario = mongoose.model('CursoXUsuario', cursoXusuarioSchema);
 
-module.exports = CursoXUsario
+module.exports = CursoXUsuario

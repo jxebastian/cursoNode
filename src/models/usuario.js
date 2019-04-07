@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const usuarioSchema = new Schema({
   nombre : {
 		type : String,
-		required : true	,
+		required : true,
 		trim : true
 	},
 	password :{
@@ -16,11 +16,7 @@ const usuarioSchema = new Schema({
 		type : String,
 		required : true	,
 		trim : true,
-    default: 'Aspirante',
-	},
-  rol : {
-		correo : String,
-		required : true
+    default: 'Aspirante'
 	},
   telefono : {
 		type: Number,
