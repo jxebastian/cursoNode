@@ -1,5 +1,5 @@
 const hbs = require('hbs');
-const funciones = require('./funciones');
+const funciones = require('./../funciones');
 
 const listarEstudiantes = (estudiantes, curso) =>{
   let texto = "";
