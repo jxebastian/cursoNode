@@ -5,11 +5,14 @@ const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
 //paths
-const dirViews = path.join(__dirname, '../../template/views')
-const dirPartials = path.join(__dirname, '../../template/partials')
+const dirViews = path.join(__dirname, '../../template/views');
+const dirPartials = path.join(__dirname, '../../template/partials');
 //modelos
+const Usuario = require('./../models/usuario');
+const Curso = require('./../models/curso');
+const CursoXUsario = require('./../models/cursoXusario');
 //helpers
-require('./../helpers/helpers')
+require('./../helpers/helpers');
 //funciones
 const funciones = require('./../funciones');
 

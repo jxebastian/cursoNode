@@ -1,0 +1,38 @@
+const mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+
+const Schema = mongoose.Schema;
+const cursoSchema = new Schema({
+	nombre : {
+		type : String,
+		required : true
+	},
+  descripcion : {
+		type : String,
+		required : true
+	},
+  valor : {
+		type : Number,
+		required : true,
+    min: 0
+	},
+  modalidad : {
+		type : String,
+		required : true
+	},
+	intensidad : {
+		type: Number,
+		default: 0,
+		min: 0
+	},
+	estado : {
+		type: String,
+		default: 'disponible'
+	}
+});
+
+cursoSchema.plugin(uniqueValidator);
+
+const Curso = mongoose.model('Curso', cursoSchema);
+
+module.exports = Curso
