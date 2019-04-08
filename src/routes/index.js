@@ -128,63 +128,128 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     })
 
 app.get('/roles-usuarios', (req, res) => {
-    let lista = funciones.obtenerUsuarios();
-    lista = lista.filter(usuario => usuario.rol != 'Coordinador');
-    res.render('roles-usuarios', {
-        lista: lista
+    Usuario.find({ rol: ['Aspirante', 'Docente'] }, (err, result) => {
+        if (err) {
+            return console.log(err);
+        }
+        if (result.length == 0) {
+            res.render('roles-usuarios', {
+                datos: false
+            });
+        } else {
+            console.log(result);
+            res.render('roles-usuarios', {
+                datos: true,
+                lista: result
+            });
+        }
     });
 });
 
 app.route('/editar-usuario/:id')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        res.render('editar-usuario', {
-            usuario: funciones.obtenerUsuario(req.params.id),
-            datos: false,
-            actualizado: false
+        Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
+            if (err) {
+                return console.log(err);
+            }
+            if (!result) {
+                res.render('editar-usuario', {
+                    existe: false,
+                    mensaje: 'Usuario no existe'
+                })
+            } else {
+                res.render('editar-usuario', {
+                    existe: true,
+                    usuario: result
+                })
+            }
         })
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        let actualizado = false;
-        actualizado = funciones.actualizarUsuario(req.body);
-        res.render('editar-usuario', {
-            usuario: funciones.obtenerUsuario(req.params.id),
-            datos: true,
-            actualizado: actualizado,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
-        })
+        Usuario.updateOne(
+            { identificacion: req.params.id },
+            {
+                nombre: req.body.nombre,
+                correo: req.body.correo,
+                telefono: req.body.telefono
+            }, (err, result) => {
+                if (err) {
+                    return res.render('editar-usuario', {
+                        actualizado: false,
+                        mensaje: 'Hubo error al actualizar'
+                    })
+                }
+                Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
+                    if (err) {
+                        return res.render('editar-usuario', {
+                            actualizado: false,
+                            mensaje: 'Hubo error trayendo al usuario'
+                        })
+                    }
+                    res.render('editar-usuario', {
+                        actualizado: true,
+                        usuario: result,
+                        existe: true,
+                        mensaje: 'Actualizado correctamente'
+                    })
+                })
+            }
+        );
     })
 
 app.route('/cambiar-rol/:id')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        res.render('cambiar-rol', {
-            usuario: funciones.obtenerUsuario(req.params.id),
-            datos: false,
-            actualizado: false,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
+        Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
+            if (err) {
+                return console.log(err);
+            }
+            if (!result) {
+                res.render('cambiar-rol', {
+                    existe: false,
+                    mensaje: 'Usuario no existe'
+                })
+            } else {
+                res.render('cambiar-rol', {
+                    existe: true,
+                    usuario: result
+                })
+            }
         })
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        let actualizado = false;
-        actualizado = funciones.cambiarRol(req.body);
-        res.render('cambiar-rol', {
-            usuario: funciones.obtenerUsuario(req.params.id),
-            datos: true,
-            actualizado: actualizado,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
-        })
+        Usuario.updateOne(
+            { identificacion: req.params.id },
+            {
+                rol: req.body.rol
+            }, (err, result) => {
+                if (err) {
+                    return res.render('cambiar-rol', {
+                        actualizado: false,
+                        mensaje: 'Hubo error al actualizar'
+                    })
+                }
+                Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
+                    if (err) {
+                        return res.render('cambiar-rol', {
+                            actualizado: false,
+                            mensaje: 'Hubo error trayendo al usuario'
+                        })
+                    }
+                    res.render('cambiar-rol', {
+                        actualizado: true,
+                        usuario: result,
+                        existe: true,
+                        mensaje: 'Actualizado correctamente'
+                    })
+                })
+            }
+        );
     });
 
 app.get('/cursos', (req, res) => {
     //let cursos = funciones.obtenerCursos();
     let cursosMostrar = [];
-    if (coordinador) {
+    if (res.locals.coordinador) {
         cursosMostrar = funciones.obtenerCursos();
     } else {
         cursosMostrar = funciones.obtenerCursosDisponibles();
