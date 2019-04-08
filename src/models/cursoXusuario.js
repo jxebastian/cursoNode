@@ -10,6 +10,20 @@ const cursoXusuarioSchema = new Schema({
   identificacionUsuario : {
 		type : Number,
 		required : true
+	},
+	nombreUsuario : {
+		type : String,
+		required : true,
+		trim : true
+	},
+	correoUsuario : {
+		type : String,
+		required : true,
+		trim : true
+	},
+  telefonoUsuario : {
+		type: Number,
+		required: true
 	}
 });
 
