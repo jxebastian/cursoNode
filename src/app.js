@@ -36,7 +36,9 @@ app.use(session({
 app.use((req, res, next) => {
   //variables de session
   if (req.session.idUsuario) {
-    res.locals.sesion = true
+    res.locals.sesion = true;
+    res.locals.nombreUsuario = req.session.nombreUsuario;
+    res.locals.rolUsuario = req.session.rolUsuario; 
     let coordinador = false;
     let aspirante = false;
     let docente = false;

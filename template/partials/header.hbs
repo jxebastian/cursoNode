@@ -9,15 +9,15 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/index.css">
     <script>
-    function check() {
-        if (document.getElementById('passlabel').value == document.getElementById('pass2label').value) {
-            document.getElementById('message').style.color = 'green';
-            document.getElementById('message').innerHTML = 'Las contraseñas coinciden';
-        } else {
-            document.getElementById('message').style.color = 'red';
-            document.getElementById('message').innerHTML = 'Las contraseñas no coinciden';
+        function check() {
+            if (document.getElementById('passlabel').value == document.getElementById('pass2label').value) {
+                document.getElementById('message').style.color = 'green';
+                document.getElementById('message').innerHTML = 'Las contraseñas coinciden';
+            } else {
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'Las contraseñas no coinciden';
+            }
         }
-    }
     </script>
 </head>
 
@@ -25,41 +25,42 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             {{#if sesion}}
-                <a class="navbar-brand" href="/index">
-                    <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Educación continua
-                </a>
-            {{else}}
+            <a class="navbar-brand" href="/index">
                 <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+                Educación continua
+            </a>
+            {{else}}
+            <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
             {{/if}}
             <ul class="navbar-nav mr-auto">
                 {{#if aspirante}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/cursos">Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/inscribir-curso">Inscribir curso</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/darme-baja">Eliminarme de un curso</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cursos">Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inscribir-curso">Inscribir curso</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/darme-baja">Eliminarme de un curso</a>
+                </li>
                 {{/if}}
                 {{#if coordinador}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/roles-usuarios">Roles usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/cursos">Cursos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/registroCurso">Crear un nuevo Curso</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/roles-usuarios">Roles usuarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cursos">Cursos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/registroCurso">Crear un nuevo Curso</a>
+                </li>
                 {{/if}}
             </ul>
             {{#if sesion}}
-                <form action="/salir" method="get">
-                    <button type="submit" class="btn btn-danger">Cerrar sessión</button>
-                </form>
+            <form action="/salir" method="get">
+                <label>{{rolUsuario}}</label>
+                <button type="submit" class="btn btn-danger">Cerrar sessión</button>
+            </form>
             {{/if}}
         </nav>
     </header>

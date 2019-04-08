@@ -45,6 +45,7 @@ app.route('/')
                     //variable de session
                     req.session.idUsuario = result.identificacion;
                     req.session.rolUsuario = result.rol;
+                    req.session.nombreUsuario = result.nombre;
                     res.redirect('index');
                 }
             }
@@ -89,6 +90,7 @@ app.route('/registro')
                     if (result){
                         //variable de session
                         req.session.idUsuario = result.identificacion;
+                        req.session.nombreUsuario = result.nombre;
                         req.session.rolUsuario = result.rol;
                         return res.redirect('index')
                     }
@@ -159,7 +161,6 @@ app.get('/roles-usuarios', (req, res) => {
                 datos: false
             });
         } else {
-            console.log(result);
             res.render('roles-usuarios', {
                 datos: true,
                 lista: result
