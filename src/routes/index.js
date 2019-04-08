@@ -62,17 +62,37 @@ app.route('/registro')
         });
     })
     .post((req, res) => {
-        let user = {
-            identificacion: parseInt(req.body.identificacion),
+        let user = new Usuario ({
+            identificacion: req.body.identificacion,
             nombre: req.body.nombre,
+            password: bcrypt.hashSync(req.body.password, 10),
             correo: req.body.correo,
-            telefono: parseInt(req.body.telefono)
-        }
-        let creado = funciones.registrarUsuario(user);
-        res.render('registro', {
-            creado: creado,
-            datos: true,
-            usuario: user
+            telefono: parseInt(req.body.telefono),
+            rol: 'Aspirante'
+        })
+        Usuario.findOne({identificacion: user.identificacion},(err,result)=>{
+            if(err){
+                return console.log(err)
+            }
+            if (result) {
+                let mensaje = 'El usuario con número de identifición ' + user.identificacion +
+                              ' ya ha sido creado, por favor, ingrese otro número de identificación.'
+                return res.render('registro',{
+                    alerta: true,
+                    usuario: user,
+                    mensaje: mensaje
+                })
+            } else {
+                user.save(user, (err,result)=>{
+                    if (err) {
+                        return console.log(err)
+                    }
+                    if (result){
+                        return res.redirect('index')
+                    }
+                })
+                
+            }
         })
     })
 

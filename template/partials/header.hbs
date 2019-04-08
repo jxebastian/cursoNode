@@ -8,6 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/index.css">
+    <script>
+    function check() {
+        if (document.getElementById('passlabel').value == document.getElementById('pass2label').value) {
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'Las contraseñas coinciden';
+        } else {
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'Las contraseñas no coinciden';
+        }
+    }
+    </script>
 </head>
 
 <body>
