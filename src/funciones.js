@@ -28,6 +28,7 @@ const obtenerUsuario = (identificacion) => {
     if (!result) {
       return console.log("No existe un usuario con esta identificacion: " + identificacion);
     } else {
+      console.log('dentro');
       return result;
     }
   });

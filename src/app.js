@@ -33,13 +33,31 @@ app.use(session({
   saveUninitialized: true
 }))
 
-app.use((req, res, next) =>{
-	//variables de session
-	if(req.session.usuario){		
-		res.locals.sesion = true
-		//res.locals.nombre = req.session.nombre
-	}	
-	next()
+app.use((req, res, next) => {
+  //variables de session
+  if (req.session.idUsuario) {
+    res.locals.sesion = true
+    let coordinador = false;
+    let aspirante = false;
+    let docente = false;
+    switch (req.session.rolUsuario) {
+      case 'Coordinador':
+        coordinador = true;
+        break;
+      case 'Aspirante':
+        aspirante = true;
+        break;
+      case 'Docente':
+        docente = true;
+        break;
+      default:
+        break;
+    }
+    res.locals.coordinador = coordinador;
+    res.locals.aspirante = aspirante;
+    res.locals.docente = docente;
+  }
+  next()
 })
 
 //bodyParser

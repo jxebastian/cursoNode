@@ -41,7 +41,11 @@
                     </li>
                 {{/if}}
             </ul>
-            <a class="btn btn-danger" href="/">Cerrar sessión</a>
+            {{#if sesion}}
+                <form action="/salir" method="get">
+                    <button type="submit" class="btn btn-danger">Cerrar sessión</button>
+                </form>
+            {{/if}}
         </nav>
     </header>
     </div>

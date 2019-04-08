@@ -21,57 +21,38 @@ app.set('view engine', 'hbs')
 app.set('views', dirViews)
 hbs.registerPartials(dirPartials)
 
-let login;
-let coordinador;
-let aspirante;
-
 app.route('/')
     .get((req, res) => {
         res.render('login');
     })
     .post((req, res) => {
-        aspirante = false;
-        coordinador = false;
-        let usuario = funciones.obtenerUsuario(req.body.identificacion);
-        let existe = false;
-        if (!usuario) {
-            return res.render('login', {
-                alerta: true,
-                mensaje: 'Usuario no existe'
-            })
-        } else {
-            login = usuario.rol;
-            if (login == 'Coordinador') {
-                coordinador = true;
-            } else if (login == 'Aspirante') {
-                aspirante = true;
+        Usuario.findOne({ identificacion: req.body.identificacion }, (err, result) => {
+            if (err) {
+                return console.log(err)
             }
-        }
-        datos = {
-            login: login,
-            aspirante: aspirante,
-            coordinador: coordinador
-        }
-        localStorage.setItem('session', JSON.stringify(datos));
-        if (existe) {
-            res.render('login', {
-                existe
-            });
-        } else {
-            res.render('index', {
-                existe,
-                aspirante: aspirante,
-                coordinador: coordinador
-            });
-        }
+            if (!result) {
+                return res.render('login', {
+                    alerta: true,
+                    mensaje: 'Usuario no existe'
+                });
+            } else {
+                if (!bcrypt.compareSync(req.body.password, result.password)) {
+                    return res.render('login', {
+                        alerta: true,
+                        mensaje: 'Contraseña incorrecta'
+                    });
+                } else {
+                    //variable de session
+                    req.session.idUsuario = result.identificacion;
+                    req.session.rolUsuario = result.rol;
+                    res.redirect('index');
+                }
+            }
+        });
     })
 
 app.get('/index', (req, res) => {
-    let session = JSON.parse(localStorage.getItem('session'));
-    res.render('index', {
-        coordinador: session.coordinador,
-        aspirante: session.aspirante
-    });
+    res.render('index');
 });
 
 app.route('/registro')
@@ -97,15 +78,11 @@ app.route('/registro')
 
 app.route('/darme-baja')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         res.render('darme-baja', {
             datos: false,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         })
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         let identificacion = parseInt(req.body.identificacion);
         let existe = funciones.obtenerUsuario(identificacion);
         if (existe) {
@@ -121,14 +98,11 @@ app.route('/darme-baja')
             idIngresado: identificacion,
             lista: cursosUsuario,
             existe: existe,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         })
     })
 
 app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         let usuario = funciones.obtenerUsuario(req.params.idUser);
         let cursos = funciones.obtenerCursos()
         let curso = cursos.find(curso => curso.id == req.params.idCurso)
@@ -138,12 +112,9 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
             usuario: usuario,
             curso: curso,
             lista: lista,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         })
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         let usuario = funciones.obtenerUsuario(req.params.idUser);
         let cursos = funciones.obtenerCursos()
         let curso = cursos.find(curso => curso.id == req.params.idCurso)
@@ -153,19 +124,14 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
             usuario: usuario,
             curso: curso,
             lista: [],
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         })
     })
 
 app.get('/roles-usuarios', (req, res) => {
-    let session = JSON.parse(localStorage.getItem('session'));
     let lista = funciones.obtenerUsuarios();
     lista = lista.filter(usuario => usuario.rol != 'Coordinador');
     res.render('roles-usuarios', {
-        lista: lista,
-        coordinador: session.coordinador,
-        aspirante: session.aspirante
+        lista: lista
     });
 });
 
@@ -175,9 +141,7 @@ app.route('/editar-usuario/:id')
         res.render('editar-usuario', {
             usuario: funciones.obtenerUsuario(req.params.id),
             datos: false,
-            actualizado: false,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
+            actualizado: false
         })
     })
     .post((req, res) => {
@@ -218,29 +182,23 @@ app.route('/cambiar-rol/:id')
     });
 
 app.get('/cursos', (req, res) => {
-    let session = JSON.parse(localStorage.getItem('session'));
     //let cursos = funciones.obtenerCursos();
     let cursosMostrar = [];
-    if (session.coordinador) {
+    if (coordinador) {
         cursosMostrar = funciones.obtenerCursos();
     } else {
         cursosMostrar = funciones.obtenerCursosDisponibles();
     };
     res.render('cursos', {
-        coordinador: session.coordinador,
-        aspirante: session.aspirante,
         cursos: cursosMostrar
     });
 });
 
 app.route('/inscribir-curso')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         res.render('inscribir-curso', {
             cursos: funciones.obtenerCursosDisponibles(),
             datos: false,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         });
     })
     .post((req, res) => {
@@ -258,15 +216,12 @@ app.route('/inscribir-curso')
                 exito = funciones.inscribirCurso(req.body);
             }
         }
-        let session = JSON.parse(localStorage.getItem('session'));
         res.render('inscribir-curso', {
             cursos: funciones.obtenerCursosDisponibles(),
             datos: true,
             usuario: usuario,
             exito: exito,
             selecione: selecione,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
         })
     });
 
@@ -304,28 +259,20 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
 
 app.route('/registroCurso')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
+
         res.render('registroCurso', {
-            coordinador: session.coordinador,
-            aspirante: session.aspirante,
-            datos: false,
             datos: false
         });
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         text = funciones.registrarCurso(req.body);
         if (text) {
             res.render('registroCurso', {
-                coordinador: session.coordinador,
-                aspirante: session.aspirante,
                 creado: true,
                 datos: true
             });
         } else {
             res.render('registroCurso', {
-                coordinador: session.coordinador,
-                aspirante: session.aspirante,
                 datos: true,
                 creado: false
             });
@@ -357,4 +304,11 @@ app.route('/estado/:idCurso')
             aspirante: session.aspirante
         })
     })
+
+app.get('/salir', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) return console.log(err)
+    })
+    res.redirect('/')
+})
 module.exports = app;
