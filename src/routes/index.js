@@ -67,8 +67,7 @@ app.route('/registro')
             nombre: req.body.nombre,
             password: bcrypt.hashSync(req.body.password, 10),
             correo: req.body.correo,
-            telefono: parseInt(req.body.telefono),
-            rol: 'Aspirante'
+            telefono: parseInt(req.body.telefono)
         })
         Usuario.findOne({identificacion: user.identificacion},(err,result)=>{
             if(err){
@@ -88,6 +87,9 @@ app.route('/registro')
                         return console.log(err)
                     }
                     if (result){
+                        //variable de session
+                        req.session.idUsuario = result.identificacion;
+                        req.session.rolUsuario = result.rol;
                         return res.redirect('index')
                     }
                 })
