@@ -6,19 +6,12 @@
 		<h2>Registro de Usuario</h2>
 	</div>
 	
-	{{#if datos}}
-        {{#if creado}}
-            <div class="alert alert-success" role="alert">
-                El usuario con número de identificación {{usuario.identificacion}}
-                ha sido creado satisfactoriamente
-            </div>
-        {{else}}
-            <div class="alert alert-danger" role="alert">
-                El usuario con número de identificación {{usuario.identificacion}} 
-                ya ha sido creado, por favor ingrese otra identificación.
-            </div>
-        {{/if}}
+	{{#if alerta}}
+        <div class="alert alert-danger" role="alert">
+            {{mensaje}}
+        </div>
     {{/if}}
+
 	<div class="row justify-content-center">
 		<div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
 			<form class="regForm" method="POST">
@@ -29,7 +22,16 @@
 				<div class="form-group">
 					<label for="nomlabel">Nombre</label>
 					<input id="nomlabel"type="text" name="nombre" class="form-control" placeholder="Ingrese su nombre" required>
-				</div>				
+				</div>
+				<div class="form-group">
+					<label for="passlabel">Contraseña</label>
+					<input id="passlabel" type="password" name="password" class="form-control" placeholder="Ingrese su Contraseña" required>
+				</div>
+				<div class="form-group">
+					<label for="pass2label">Confirmar contraseña</label>
+					<input id="pass2label" type="password" name="password2" class="form-control" onkeyup="check()" placeholder="Confirme su Contraseña" required>
+				</div>
+				<span class="p-1"id="message"></span>				
 				<div class="form-group">
 					<label for="emllabel">Correo electrónico</label>
 					<input id="emllabel"type="email" name="correo" class="form-control" placeholder="Ingrese su email"required>
@@ -39,8 +41,8 @@
 					<input id="tellabel"type="number" name="telefono" class="form-control" placeholder="Ingrese su número de telefono" required>
 				</div>
 				<div class="row justify-content-center">
-					<a href="/" class="btn btn-primary col-sm-2">Regresar</a>
-					<button type="submit" class="btn btn-primary col-sm-2">Registrar</button>
+					<a href="/" class="btn btn-primary m-2 col-sm-2">Regresar</a>
+					<button type="submit" class="btn btn-primary m-2 col-sm-2">Registrar</button>
 				</div>		
 			</form>
 		</div>
