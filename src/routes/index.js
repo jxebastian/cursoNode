@@ -32,7 +32,10 @@ app.route('/')
         let usuario = funciones.obtenerUsuario(req.body.identificacion);
         let existe = false;
         if (!usuario) {
-            existe = true;
+            return res.render('login', {
+                alerta: true,
+                mensaje: 'Usuario no existe'
+            })
         } else {
             login = usuario.rol;
             if (login == 'Coordinador') {

@@ -6,3 +6,8 @@ body {
     margin: 0;
     margin-bottom: 40px;
 }
+
+.login {
+    margin: 5%;
+    text-align: center;
+}
