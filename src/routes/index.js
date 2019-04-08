@@ -216,12 +216,12 @@ app.route('/cambiar-rol/:id')
 
 app.get('/cursos', (req, res) => {
     let session = JSON.parse(localStorage.getItem('session'));
-    let cursos = funciones.obtenerCursos();
+    //let cursos = funciones.obtenerCursos();
     let cursosMostrar = [];
     if (session.coordinador) {
-        cursosMostrar = cursos;
+        cursosMostrar = funciones.obtenerCursos();
     } else {
-        cursosMostrar = cursos.filter(curso => curso.estado == "disponible");
+        cursosMostrar = funciones.obtenerCursosDisponibles();
     };
     res.render('cursos', {
         coordinador: session.coordinador,
@@ -271,8 +271,8 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
     .get((req, res) => {
         let session = JSON.parse(localStorage.getItem('session'));
         let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
+        let cursos = funciones.obtenerCurso(req.params.idCurso);
+        //let curso = cursos.find(curso => curso.id == req.params.idCurso)
         let lista = [curso];
         res.render('desmatricular', {
             eliminado: false,
@@ -281,13 +281,13 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
             lista: lista,
             coordinador: session.coordinador,
             aspirante: session.aspirante
-        })
+        });
     })
     .post((req, res) => {
         let session = JSON.parse(localStorage.getItem('session'));
         let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
+        let cursos = funciones.obtenerCurso(req.params.idCurso)
+        //let curso = cursos.find(curso => curso.id == req.params.idCurso)
         funciones.eliminarCursoXUsuario(curso.id, usuario.identifion)
         res.render('desmatricular', {
             eliminado: true,
@@ -296,7 +296,7 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
             lista: [],
             coordinador: session.coordinador,
             aspirante: session.aspirante
-        })
+        });
     })
 
 app.route('/registroCurso')

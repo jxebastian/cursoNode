@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const Usuario = require('./models/usuario');
+const Curso = require('./models/curso');
+const CursoXUsuario = require('./models/cursoXusuario');
 
 listaUsuarios = [];
 listaCursos = [];
@@ -18,8 +21,16 @@ const obtenerUsuarios = () => {
 }
 
 const obtenerUsuario = (identificacion) => {
-    obtenerUsuarios();
-    return listaUsuarios.find(usuario => usuario.identificacion == identificacion);
+  return Usuario.findOne({identificacion: identificacion}, (err, result) => {
+    if (err) {
+      return console.log("Error en obtenerUsuario(id)");
+    }
+    if (!result) {
+      return console.log("No existe un usuario con esta identificacion: " + identificacion);
+    } else {
+      return result;
+    }
+  });
 }
 
 const actualizarUsuario = (datos) => {
@@ -60,12 +71,21 @@ const guardarCursos = () => {
 }
 
 const obtenerCursos = () => {
-    try {
-        listaCursos = require('./cursos.json');
-    } catch (error) {
-        listaCursos = [];
-    }
-    return listaCursos;
+  return Curso.find({}, (err,results) => {
+		if (err){
+			return console.log(err);
+		}
+		return results;
+	});
+}
+
+const obtenerCurso = (id) => {
+  return Curso.findOne({id: id},(err,results) => {
+		if (err){
+			return console.log(err);
+		}
+		return results;
+	});
 }
 
 const obtenerCursosXUsuarios = () => {
@@ -78,8 +98,12 @@ const obtenerCursosXUsuarios = () => {
 }
 
 const obtenerCursosDisponibles = () => {
-    obtenerCursos();
-    return listaCursos.filter(curso => curso.estado == 'disponible');
+  return Curso.find({estado: 'disponible'},(err,results)=>{
+    if (err){
+      return console.log(err);
+    }
+    return results;
+  });
 }
 
 const obtenerCursosUsuario = (usuario) => {
@@ -97,17 +121,28 @@ const obtenerCursosUsuario = (usuario) => {
 }
 
 const obtenerUsuariosXcurso = (curso) => {
-    obtenerCursosXUsuarios();
-    obtenerUsuarios();
-    listaUsuariosResultante = [];
-    let usuariosEncontrados = listaCursosXUsuarios.filter(cursoXusuario => cursoXusuario.idCurso == curso);
-    usuariosEncontrados.forEach(usuario => {
-        let match = listaUsuarios.find(user => user.identificacion == usuario.identificacionUsuario);
-        if (match) {
-            listaUsuariosResultante.push(match);
-        };
-    });
-    return listaUsuariosResultante;
+
+  let usuariosEncontrados = [];
+  return CursoXUsuario.find({idCurso: curso}, (err, results) =>{
+    if (err){
+      return console.log(err);
+    }
+    if (!results) {
+      return false;
+    } else {
+      results.forEach(result => {
+        Usuario.findById(result._id, (err, res) => {
+          if (err) {
+            return console.log("Error en findById");
+          }
+          if (res) {
+            usuariosEncontrados.push(res);
+          }
+        });
+      });
+      return usuariosEncontrados;
+    }
+  });
 };
 
 const registrarUsuario = (usuario) => {
@@ -162,14 +197,14 @@ const inscribirCurso = (datos) => {
 }
 
 const eliminarCursoXUsuario = (idCurso, idUsuario) => {
-    obtenerCursosXUsuarios();
-    let element = listaCursosXUsuarios.find(curso => (curso.idCurso == idCurso) && (curso.identificacionUsuario == idUsuario))
-    listaCursosXUsuarios.splice(listaCursosXUsuarios.indexOf(element), 1);
-    let lista = JSON.stringify(listaCursosXUsuarios);
-    fs.writeFile('./src/cursosXusuarios.json', lista, (err) => {
-        if (err) throw (err);
-        console.log('Archivo creado con éxito')
-    });
+  return CursoXUsuario.findOneAndDelete({idCurso: idCurso, identificacionUsuario: idUsuario}, (err, result) => {
+    if (err) {
+      return console.log("Error en eliminarCursoXUsuario");
+    }
+    if (!result) {
+      return console.log("No eliminó en eliminarCursoXUsuario");
+    }
+  });
 }
 
 const crearCurso = (curso) => {
@@ -215,6 +250,7 @@ module.exports = {
     actualizarUsuario,
     cambiarRol,
     obtenerCursos,
+    obtenerCurso,
     obtenerCursosDisponibles,
     inscribirCurso,
     registrarUsuario,
