@@ -285,6 +285,9 @@ app.route('/cambiar-rol/:id')
     });
 
 app.get('/cursos', (req, res) => {
+    if (!res.locals.sesion) {
+        return res.redirect('/');
+    }
     if (res.locals.coordinador) {
         Curso.find({}, (err, cursos) => {
             if (err) {
@@ -389,6 +392,9 @@ app.route('/inscribir-curso/:id')
 
 app.route('/desmatricular/:idCurso' + '-' + ':idUser')
     .get((req, res) => {
+        if (!res.locals.sesion) {
+            return res.redirect('/');
+        }
         if (!res.locals.coordinador) {
           res.render('index', {});
         }
@@ -474,7 +480,7 @@ app.get('/salir', (req, res) => {
 
 app.get('*',(req,res)=> {
 	res.render('error', {
-		titulo: "Error 404",		
+		titulo: "Error 404",
 	})
 });
 module.exports = app;
