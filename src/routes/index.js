@@ -347,33 +347,31 @@ app.route('/inscribir-curso')
 
 app.route('/desmatricular/:idCurso' + '-' + ':idUser')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCurso(req.params.idCurso);
-        //let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        let lista = [curso];
-        res.render('desmatricular', {
-            eliminado: false,
-            usuario: usuario,
-            curso: curso,
-            lista: lista,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
+      Curso.findOne({id: req.params.idCurso}, (err, resultCurso) => {
+        if (err) {
+          return console.log(err);
+        }
+        Usuario.findOne({identificacion: req.params.idUser}, (err, resultUser) => {
+          if (err) {
+            return console.log(err);
+          }
+          res.render('desmatricular', {
+              eliminado: false,
+              usuario: resultUser,
+              curso: resultCurso,
+              lista: [resultCurso]
+          });
         });
+      });
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCurso(req.params.idCurso)
-        //let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        funciones.eliminarCursoXUsuario(curso.id, usuario.identifion)
-        res.render('desmatricular', {
-            eliminado: true,
-            usuario: usuario,
-            curso: curso,
-            lista: [],
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
+        CursoXUsuario.findOneAndDelete({idCurso: req.params.idCurso, identificacionUsuario: req.params.idUser}, (err, result) => {
+          if (err) {
+            console.log(err);
+          }
+          res.render('desmatricular', {
+              eliminado: true
+          });
         });
     })
 
