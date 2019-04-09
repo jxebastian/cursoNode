@@ -33,6 +33,9 @@ const cursoSchema = new Schema({
 	estado : {
 		type: String,
 		enum: {values: ['disponible', 'no disponible']}
+	},
+	identificacionDocente: {
+		type: Number
 	}
 });
 

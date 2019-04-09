@@ -79,7 +79,8 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
       let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
         "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
-        "<b> Valor: </b> " + curso.valor + " pesos.";
+        "<b> Valor: </b> " + curso.valor + " pesos." + "<br><br>" +
+        `<a href= "/inscribir-curso/${curso.id}" class="btn btn-primary" >Inscribirse al curso</a> <br><br>`;
       texto = texto +
         `<div class="card">
                 <div class="card-header" id="heading${i}">

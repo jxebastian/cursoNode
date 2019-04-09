@@ -23,6 +23,9 @@ hbs.registerPartials(dirPartials)
 
 app.route('/')
     .get((req, res) => {
+        if (res.locals.sesion) {
+            return res.redirect('/index');
+        }
         res.render('login');
     })
     .post((req, res) => {
@@ -287,21 +290,21 @@ app.get('/cursos', (req, res) => {
             })
         });
     } else if (res.locals.docente) {
-      Curso.find({}, (err, cursos) => {
-          if (err) {
-              return console.log(err);
-          }
-          CursoXUsuario.find({}, (err, cursoXUsuario) => {
-              if (err) {
-                  return console.log(err);
-              }
-              console.log(cursoXUsuario);
-              res.render('cursos', {
-                  cursos: cursos,
-                  cursoXUsuario: cursoXUsuario
-              });
-          })
-      });
+        Curso.find({}, (err, cursos) => {
+            if (err) {
+                return console.log(err);
+            }
+            CursoXUsuario.find({}, (err, cursoXUsuario) => {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log(cursoXUsuario);
+                res.render('cursos', {
+                    cursos: cursos,
+                    cursoXUsuario: cursoXUsuario
+                });
+            })
+        });
     } else {
         Curso.find({ estado: 'disponible' }, (err, results) => {
             if (err) {
@@ -314,64 +317,93 @@ app.get('/cursos', (req, res) => {
     };
 });
 
-app.route('/inscribir-curso')
+app.route('/inscribir-curso/:id')
     .get((req, res) => {
-        res.render('inscribir-curso', {
-            cursos: funciones.obtenerCursosDisponibles(),
-            datos: false,
-        });
+        if (!res.locals.aspirante) {
+            return res.redirect('/');
+        }
+        Curso.findOne({ id: req.params.id }, (err, result) => {
+            if (err) {
+                return console.log(err);
+            }
+            if (!result) {
+                res.render('inscribir-curso', {
+                    alerta: true,
+                    mensaje: 'Este curso no existe'
+                })
+            } else {
+                res.render('inscribir-curso', {
+                    curso: result
+                })
+            }
+        })
     })
     .post((req, res) => {
-        let existe = funciones.obtenerUsuario(req.body.identificacion);
-        let usuario;
-        let exito;
-        let selecione;
-        if (req.body.idCurso == 'selecione') {
-            selecione = true;
-        } else {
-            if (!existe) {
-                usuario = true;
-            } else {
-                usuario = false;
-                exito = funciones.inscribirCurso(req.body);
-            }
-        }
-        res.render('inscribir-curso', {
-            cursos: funciones.obtenerCursosDisponibles(),
-            datos: true,
-            usuario: usuario,
-            exito: exito,
-            selecione: selecione,
-        })
+        CursoXUsuario.findOne({ idCurso: req.params.id, identificacionUsuario: req.session.idUsuario },
+            (err, resultado) => {
+                if (err) {
+                    return console.log(err);
+                }
+                if (resultado) {
+                    res.render('inscribir-curso', {
+                        alerta: true,
+                        mensaje: 'Usted ya se encuentra inscrito en este curso'
+                    })
+                } else {
+                    Usuario.findOne({ identificacion: req.session.idUsuario }, (err, result) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                        if (result) {
+                            let cursoXUsuario = new CursoXUsuario({
+                                idCurso: req.params.id,
+                                identificacionUsuario: result.identificacion,
+                                nombreUsuario: result.nombre,
+                                correoUsuario: result.correo,
+                                telefonoUsuario: result.telefono
+                            });
+                            cursoXUsuario.save((err, result) => {
+                                if (err) {
+                                    return console.log(err);
+                                }
+                                res.render('inscribir-curso', {
+                                    exito: true,
+                                    mensaje: 'Registro al curso exitosamente'
+                                })
+                            })
+                        }
+                    })
+                }
+            })
     });
 
 app.route('/desmatricular/:idCurso' + '-' + ':idUser')
     .get((req, res) => {
-      Curso.findOne({id: req.params.idCurso}, (err, resultCurso) => {
-        if (err) {
-          return console.log(err);
-        }
-        Usuario.findOne({identificacion: req.params.idUser}, (err, resultUser) => {
-          if (err) {
-            return console.log(err);
-          }
-          res.render('desmatricular', {
-              eliminado: false,
-              usuario: resultUser,
-              curso: resultCurso,
-              lista: [resultCurso]
-          });
+        Curso.findOne({ id: req.params.idCurso }, (err, resultCurso) => {
+            if (err) {
+                return console.log(err);
+            }
+            Usuario.findOne({ identificacion: req.params.idUser }, (err, resultUser) => {
+                if (err) {
+                    return console.log(err);
+                }
+                res.render('desmatricular', {
+                    eliminado: false,
+                    usuario: resultUser,
+                    curso: resultCurso,
+                    lista: [resultCurso]
+                });
+            });
         });
-      });
     })
     .post((req, res) => {
-        CursoXUsuario.findOneAndDelete({idCurso: req.params.idCurso, identificacionUsuario: req.params.idUser}, (err, result) => {
-          if (err) {
-            console.log(err);
-          }
-          res.render('desmatricular', {
-              eliminado: true
-          });
+        CursoXUsuario.findOneAndDelete({ idCurso: req.params.idCurso, identificacionUsuario: req.params.idUser }, (err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            res.render('desmatricular', {
+                eliminado: true
+            });
         });
     })
 
@@ -398,16 +430,13 @@ app.route('/registroCurso')
     });
 app.route('/estado/:idCurso')
     .get((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
         let cursos = funciones.obtenerCursos()
         let curso = cursos.find(curso => curso.id == req.params.idCurso)
         let lista = [curso];
         res.render('estado', {
             cerrado: false,
             curso: curso,
-            lista: lista,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
+            lista: lista
         })
     })
     .post((req, res) => {

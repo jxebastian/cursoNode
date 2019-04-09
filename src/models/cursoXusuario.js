@@ -13,8 +13,7 @@ const cursoXusuarioSchema = new Schema({
 	},
 	nombreUsuario : {
 		type : String,
-		required : true,
-		trim : true
+		required : true
 	},
 	correoUsuario : {
 		type : String,

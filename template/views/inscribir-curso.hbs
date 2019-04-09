@@ -1,53 +1,39 @@
 {{>header}}
 <div class="container">
-    {{#if datos}}
-        {{#if exito}}
-            <div class="alert alert-success" role="alert">
-                Registrado en el curso satisfactoriamente
-            </div>
-        {{else}}
-            {{#if usuario}}
-                <div class="alert alert-danger" role="alert">
-                    El aspirante no esta registrado
-                </div>
-            {{else}}
-                {{#if selecione}}
-                    <div class="alert alert-danger" role="alert">
-                        Seleccione un curso
-                    </div>
-                {{else}}
-                    <div class="alert alert-danger" role="alert">
-                        El aspirante ya se encuentra registrado
-                    </div>
-                {{/if}}
-            {{/if}}
-        {{/if}}
-    {{/if}}
-    <div class="row justify-content-center">
-        <div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
-            <h3>Inscribirse a un curso</h3>
-            <form action="" method="post" class="regForm">
-                <div class="form-gruop">
-                    <div>
-                        <label for="identificacion">Identificación</label>
-                        <input type="number" class="form-control" name="identificacion" required>
-                    </div>
-                    <div>
-                        <label for="idCurso">Cursos</label>
-                        <select name="idCurso" class="custom-select" required>
-                            <option selected value="selecione">Selecione curso</option>
-                            {{#each cursos as |curso|}}
-                                <option value="{{curso.id}}">{{curso.nombre}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <br>
-                    <a href="/index" class="btn btn-primary">Regresar</a>
-                    <button type="submit" class="btn btn-primary">Inscribirse</button>
-                </div>
+    {{#if alerta}}
+    <div class="row justify-content-center m-3 alert alert-danger">
+        <p>{{mensaje}}</p>
+    </div>
+    <div class="row justify-content-center m-3">
+        <div class="col d-flex justify-content-center">
+            <a href="/cursos" class="btn btn-primary">Regresar</a>
+        </div>
+    </div>
+    {{else}}
+    {{#if exito}}
+    <div class="row justify-content-center m-3 alert alert-success">
+        <p>{{mensaje}}</p>
+    </div>
+    <div class="row justify-content-center m-3">
+        <div class="col d-flex justify-content-center">
+            <a href="/cursos" class="btn btn-primary">Regresar</a>
+        </div>
+    </div>
+    {{else}}
+    <div class="row justify-content-center m-3 alert alert-warning">
+        <p>Atención: Está a punto de inscribirse al curso {{curso.nombre}} ¿Desea continuar?</p>
+    </div>
+    <div class="row justify-content-center m-3">
+        <div class="col d-flex justify-content-end">
+            <a href="/cursos" class="btn btn-primary">Regresar</a>
+        </div>
+        <div class="col d-flex justify-content-start">
+            <form method="POST">
+                <button type="submit" class="btn btn-primary">Aceptar</button>
             </form>
         </div>
     </div>
+    {{/if}}
+    {{/if}}
 </div>
-
 {{>footer}}
