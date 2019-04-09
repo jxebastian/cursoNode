@@ -1,5 +1,6 @@
 const hbs = require('hbs');
 const funciones = require('./../funciones');
+const CursoXUsuario = require('./../models/cursoXusuario');
 
 const listarEstudiantes = (estudiantes, curso) =>{
   let texto = "";
@@ -72,20 +73,15 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
 
 hbs.registerHelper('listarCursosCoordinador', (cursos) => {
   if (cursos) {
+
     texto ="<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
       let cabecera = curso.nombre + "<br>" +
                       curso.descripcion + "<br>" +
                       curso.valor + " pesos.";
-      let estudiantes = funciones.obtenerUsuariosXcurso(curso.id);
-      let listaEstudiantes;
-      if (estudiantes) {
-        listaEstudiantes = listarEstudiantes(estudiantes, curso.id);
-      } else {
-        listaEstudiantes = "<s> No hay estudiantes matriculados en este curso <s>";
-      }
-
+      CursoXUsuario.findOne({idCurso: curso.id}, (err, result) => {
+        listaEstudiantes = listarEstudiantes(result, curso.id);
         let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
                         "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
                         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
@@ -93,7 +89,6 @@ hbs.registerHelper('listarCursosCoordinador', (cursos) => {
                         "<b> Estado: </b> " + curso.estado + ". <br>" +
                         `<a href= "/estado/${curso.id}" class="btn btn-danger" >Cambiar estado</a> <br><br>` +
                         listaEstudiantes;
-
         texto = texto +
                 `<div class="card">
                   <div class="card-header" id="heading${i}">
@@ -110,8 +105,9 @@ hbs.registerHelper('listarCursosCoordinador', (cursos) => {
                     </div>
                   </div>
                 </div>`;
-                i = i + 1;
-      });
+      })
+      i = i + 1;
+    });
       return texto;
   } else {
     return "<h1>No hay cursos por mostrar</h1>";

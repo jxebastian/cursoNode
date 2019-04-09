@@ -95,7 +95,7 @@ app.route('/registro')
                         return res.redirect('index')
                     }
                 })
-                
+
             }
         })
     })
@@ -270,16 +270,43 @@ app.route('/cambiar-rol/:id')
     });
 
 app.get('/cursos', (req, res) => {
-    //let cursos = funciones.obtenerCursos();
-    let cursosMostrar = [];
-    if (res.locals.coordinador) {
-        cursosMostrar = funciones.obtenerCursos();
-    } else {
-        cursosMostrar = funciones.obtenerCursosDisponibles();
-    };
-    res.render('cursos', {
-        cursos: cursosMostrar
+  if (res.locals.coordinador) {
+      Curso.find({},(err,results)=>{
+        if (err){
+          return console.log(err);
+        }
+        res.render('cursos', {
+            cursos: results,
+            coordinador: res.locals.coordinador,
+            docente: res.locals.docente,
+            aspirante: res.locals.aspirante
+        });
+      });
+  } else if (res.locals.docente) {
+    Curso.find({},(err,results)=>{
+      if (err){
+        return console.log(err);
+      }
+      res.render('cursos', {
+          cursos: results,
+          coordinador: res.locals.coordinador,
+          docente: res.locals.docente,
+          aspirante: res.locals.aspirante
+      });
     });
+  } else {
+      Curso.find({estado: 'disponible'},(err,results)=>{
+        if (err){
+          return console.log(err);
+        }
+        res.render('cursos', {
+            cursos: results,
+            coordinador: res.locals.coordinador,
+            docente: res.locals.docente,
+            aspirante: res.locals.aspirante
+        });
+      });
+  };
 });
 
 app.route('/inscribir-curso')
