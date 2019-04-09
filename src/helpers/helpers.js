@@ -2,11 +2,12 @@ const hbs = require('hbs');
 const funciones = require('./../funciones');
 const CursoXUsuario = require('./../models/cursoXusuario');
 
-const listarEstudiantes = (estudiantes, curso) =>{
+const listarEstudiantes = (estudiantes, curso) => {
   let texto = "";
   if (estudiantes.length == 0) {
     texto = "No hay estudiantes matriculados en este curso";
   } else {
+    estudiantes = estudiantes.filter(doc => doc.idCurso == curso);
     texto = `<div class="container">
                 <table class="table table-striped">
                   <thead calss="thead-dark">
@@ -37,18 +38,18 @@ const listarEstudiantes = (estudiantes, curso) =>{
 
 hbs.registerHelper('listarCursosInteresado', (cursos) => {
   if (cursos) {
-    texto ="<div class='accordion' id='accordion'>";
+    texto = "<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
       let cabecera = curso.nombre + "<br>" +
-                      curso.descripcion + "<br>" +
-                      curso.valor + " pesos.";
+        curso.descripcion + "<br>" +
+        curso.valor + " pesos.";
       let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
-                      "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
-                      "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
-                      "<b> Valor: </b> " + curso.valor + " pesos.";
+        "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
+        "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
+        "<b> Valor: </b> " + curso.valor + " pesos.";
       texto = texto +
-              `<div class="card">
+        `<div class="card">
                 <div class="card-header" id="heading${i}">
                   <h5 class="mb-0">
                     <button class="btn btn-outline-info btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
@@ -63,7 +64,7 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
                   </div>
                 </div>
               </div>`;
-              i = i + 1;
+      i = i + 1;
     });
     return texto;
   } else {
@@ -71,44 +72,45 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
   }
 });
 
-hbs.registerHelper('listarCursosCoordinador', (cursos) => {
+hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
   if (cursos) {
-
-    texto ="<div class='accordion' id='accordion'>";
+    console.log(cursoXUsuario);
+    
+    texto = "<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
       let cabecera = curso.nombre + "<br>" +
-                      curso.descripcion + "<br>" +
-                      curso.valor + " pesos.";
-      CursoXUsuario.findOne({idCurso: curso.id}, (err, result) => {
-        listaEstudiantes = listarEstudiantes(result, curso.id);
-        let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
-                        "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
-                        "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>"  +
-                        "<b> Valor: </b> " + curso.valor + " pesos. <br>" +
-                        "<b> Estado: </b> " + curso.estado + ". <br>" +
-                        `<a href= "/estado/${curso.id}" class="btn btn-danger" >Cambiar estado</a> <br><br>` +
-                        listaEstudiantes;
-        texto = texto +
-                `<div class="card">
-                  <div class="card-header" id="heading${i}">
-                    <h5 class="mb-0">
-                      <button class="btn btn-outline-info btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
-                        ${cabecera}
-                      </button>
-                    </h5>
-                  </div>
-
-                  <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordion">
-                    <div class="card-body">
-                      ${contenido}
+        curso.descripcion + "<br>" +
+        curso.valor + " pesos.";
+      listaEstudiantes = listarEstudiantes(cursoXUsuario, curso.id);
+      let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
+        "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
+        "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
+        "<b> Valor: </b> " + curso.valor + " pesos. <br>" +
+        "<b> Estado: </b> " + curso.estado + ". <br>" +
+        `<a href= "/estado/${curso.id}" class="btn btn-danger" >Cambiar estado</a> <br><br>` +
+        listaEstudiantes;
+      texto = texto +
+        `<div class="card">
+                    <div class="card-header" id="heading${i}">
+                      <h5 class="mb-0">
+                        <button class="btn btn-outline-info btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                          ${cabecera}
+                        </button>
+                      </h5>
                     </div>
-                  </div>
-                </div>`;
-      })
+  
+                    <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordion">
+                      <div class="card-body">
+                        ${contenido}
+                      </div>
+                    </div>
+                  </div>`;
+
       i = i + 1;
     });
-      return texto;
+    return texto;
+
   } else {
     return "<h1>No hay cursos por mostrar</h1>";
   }

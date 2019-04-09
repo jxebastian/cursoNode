@@ -63,31 +63,31 @@ app.route('/registro')
         });
     })
     .post((req, res) => {
-        let user = new Usuario ({
+        let user = new Usuario({
             identificacion: req.body.identificacion,
             nombre: req.body.nombre,
             password: bcrypt.hashSync(req.body.password, 10),
             correo: req.body.correo,
             telefono: parseInt(req.body.telefono)
         })
-        Usuario.findOne({identificacion: user.identificacion},(err,result)=>{
-            if(err){
+        Usuario.findOne({ identificacion: user.identificacion }, (err, result) => {
+            if (err) {
                 return console.log(err)
             }
             if (result) {
                 let mensaje = 'El usuario con número de identifición ' + user.identificacion +
-                              ' ya ha sido creado, por favor, ingrese otro número de identificación.'
-                return res.render('registro',{
+                    ' ya ha sido creado, por favor, ingrese otro número de identificación.'
+                return res.render('registro', {
                     alerta: true,
                     usuario: user,
                     mensaje: mensaje
                 })
             } else {
-                user.save(user, (err,result)=>{
+                user.save(user, (err, result) => {
                     if (err) {
                         return console.log(err)
                     }
-                    if (result){
+                    if (result) {
                         //variable de session
                         req.session.idUsuario = result.identificacion;
                         req.session.nombreUsuario = result.nombre;
@@ -270,43 +270,41 @@ app.route('/cambiar-rol/:id')
     });
 
 app.get('/cursos', (req, res) => {
-  if (res.locals.coordinador) {
-      Curso.find({},(err,results)=>{
-        if (err){
-          return console.log(err);
-        }
-        res.render('cursos', {
-            cursos: results,
-            coordinador: res.locals.coordinador,
-            docente: res.locals.docente,
-            aspirante: res.locals.aspirante
+    if (res.locals.coordinador) {
+        Curso.find({}, (err, cursos) => {
+            if (err) {
+                return console.log(err);
+            }
+            CursoXUsuario.find({}, (err, cursoXUsuario) => {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log(cursoXUsuario);
+                res.render('cursos', {
+                    cursos: cursos,
+                    cursoXUsuario: cursoXUsuario
+                });
+            })
         });
-      });
-  } else if (res.locals.docente) {
-    Curso.find({},(err,results)=>{
-      if (err){
-        return console.log(err);
-      }
-      res.render('cursos', {
-          cursos: results,
-          coordinador: res.locals.coordinador,
-          docente: res.locals.docente,
-          aspirante: res.locals.aspirante
-      });
-    });
-  } else {
-      Curso.find({estado: 'disponible'},(err,results)=>{
-        if (err){
-          return console.log(err);
-        }
-        res.render('cursos', {
-            cursos: results,
-            coordinador: res.locals.coordinador,
-            docente: res.locals.docente,
-            aspirante: res.locals.aspirante
+    } else if (res.locals.docente) {
+        Curso.find({}, (err, results) => {
+            if (err) {
+                return console.log(err);
+            }
+            res.render('cursos', {
+                cursos: results,
+            });
         });
-      });
-  };
+    } else {
+        Curso.find({ estado: 'disponible' }, (err, results) => {
+            if (err) {
+                return console.log(err);
+            }
+            res.render('cursos', {
+                cursos: results,
+            });
+        });
+    };
 });
 
 app.route('/inscribir-curso')
