@@ -56,6 +56,9 @@ app.route('/')
     })
 
 app.get('/index', (req, res) => {
+    if (!res.locals.sesion) {
+        return res.redirect('/');
+    }
     res.render('index');
 });
 
@@ -155,6 +158,9 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     })
 
 app.get('/roles-usuarios', (req, res) => {
+    if(!res.locals.coordinador){
+        return res.redirect('/index');
+    }
     Usuario.find({ rol: ['Aspirante', 'Docente'] }, (err, result) => {
         if (err) {
             return console.log(err);
@@ -174,6 +180,9 @@ app.get('/roles-usuarios', (req, res) => {
 
 app.route('/editar-usuario/:id')
     .get((req, res) => {
+        if(!res.locals.coordinador){
+            return res.redirect('/index');
+        }
         Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
             if (err) {
                 return console.log(err);
@@ -225,6 +234,9 @@ app.route('/editar-usuario/:id')
 
 app.route('/cambiar-rol/:id')
     .get((req, res) => {
+        if(!res.locals.coordinador){
+            return res.redirect('/index');
+        }
         Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
             if (err) {
                 return console.log(err);
@@ -458,4 +470,10 @@ app.get('/salir', (req, res) => {
     })
     res.redirect('/')
 })
+
+app.get('*',(req,res)=> {
+	res.render('error', {
+		titulo: "Error 404",		
+	})
+});
 module.exports = app;
