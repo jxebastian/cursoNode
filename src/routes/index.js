@@ -282,7 +282,6 @@ app.get('/cursos', (req, res) => {
                 if (err) {
                     return console.log(err);
                 }
-                console.log(cursoXUsuario);
                 res.render('cursos', {
                     cursos: cursos,
                     cursoXUsuario: cursoXUsuario
@@ -290,7 +289,7 @@ app.get('/cursos', (req, res) => {
             })
         });
     } else if (res.locals.docente) {
-        Curso.find({}, (err, cursos) => {
+        Curso.find({identificacionDocente: req.session.idUsuario}, (err, cursos) => {
             if (err) {
                 return console.log(err);
             }
@@ -298,7 +297,6 @@ app.get('/cursos', (req, res) => {
                 if (err) {
                     return console.log(err);
                 }
-                console.log(cursoXUsuario);
                 res.render('cursos', {
                     cursos: cursos,
                     cursoXUsuario: cursoXUsuario
@@ -379,6 +377,9 @@ app.route('/inscribir-curso/:id')
 
 app.route('/desmatricular/:idCurso' + '-' + ':idUser')
     .get((req, res) => {
+        if (!res.locals.coordinador) {
+          res.render('index', {});
+        }
         Curso.findOne({ id: req.params.idCurso }, (err, resultCurso) => {
             if (err) {
                 return console.log(err);

@@ -69,7 +69,7 @@ const listarEstudiantesDocente = (estudiantes, curso) => {
 };
 
 hbs.registerHelper('listarCursosInteresado', (cursos) => {
-  if (cursos) {
+  if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
@@ -106,7 +106,7 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
 });
 
 hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
-  if (cursos) {
+  if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
@@ -148,7 +148,7 @@ hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
 });
 
 hbs.registerHelper('listarCursosDocente', (cursos, cursoXUsuario) => {
-  if (cursos) {
+  if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
     cursos.forEach(curso => {
