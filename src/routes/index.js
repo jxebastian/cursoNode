@@ -287,14 +287,21 @@ app.get('/cursos', (req, res) => {
             })
         });
     } else if (res.locals.docente) {
-        Curso.find({}, (err, results) => {
-            if (err) {
-                return console.log(err);
-            }
-            res.render('cursos', {
-                cursos: results,
-            });
-        });
+      Curso.find({}, (err, cursos) => {
+          if (err) {
+              return console.log(err);
+          }
+          CursoXUsuario.find({}, (err, cursoXUsuario) => {
+              if (err) {
+                  return console.log(err);
+              }
+              console.log(cursoXUsuario);
+              res.render('cursos', {
+                  cursos: cursos,
+                  cursoXUsuario: cursoXUsuario
+              });
+          })
+      });
     } else {
         Curso.find({ estado: 'disponible' }, (err, results) => {
             if (err) {
