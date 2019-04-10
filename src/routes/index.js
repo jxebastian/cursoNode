@@ -434,19 +434,43 @@ app.route('/registroCurso')
         });
     })
     .post((req, res) => {
-        text = funciones.registrarCurso(req.body);
-        if (text) {
-            res.render('registroCurso', {
-                creado: true,
-                datos: true
-            });
-        } else {
-            res.render('registroCurso', {
-                datos: true,
-                creado: false
-            });
-        }
-    });
+        let curse = new Curso({
+            id:  parseInt(req.body.id),
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            valor:  parseInt(req.body.valor),
+            modalidad: req.body.modalidad,
+            intensidad:  parseInt(req.body.intensidad),
+            estado: 'disponible'
+        })
+        Curso.findOne({ id: curse.id }, (err, result) => {
+            if (err) {
+                return console.log(err)
+            }
+            if (result) {
+                let mensaje = 'El curso con número de identifición ' + curse.id +
+                    ' ya ha sido creado, por favor, ingrese otro número de identificación(ID).'
+                return res.render('registroCurso', {
+                    datos: true,
+                    creado: false,
+                    mensaje: mensaje
+                })
+            } else {
+                curse.save(curse, (err, result) => {
+                    if (err) {
+                        return console.log(err)
+                    }
+                    if (result) {
+                        res.render('registroCurso', {
+                            creado: true,
+                            datos: true
+                        })
+                    }
+                })
+
+            }
+        })
+    })
 app.route('/estado/:idCurso')
     .get((req, res) => {
         let cursos = funciones.obtenerCursos()
