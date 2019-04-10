@@ -108,26 +108,55 @@ app.route('/registro')
 
 app.route('/darme-baja')
     .get((req, res) => {
-        res.render('darme-baja', {
-            datos: false,
-        })
-    })
-    .post((req, res) => {
-        let identificacion = parseInt(req.body.identificacion);
-        let existe = funciones.obtenerUsuario(identificacion);
-        if (existe) {
-            cursosUsuario = funciones.obtenerCursosUsuario(existe);
-            cursosUsuario.forEach(curso => {
-                curso.idUser = identificacion
-            })
-        } else {
-            cursosUsuario = []
+        if(!res.locals.aspirante){
+            return res.redirect('/index');
         }
-        res.render('darme-baja', {
-            datos: true,
-            idIngresado: identificacion,
-            lista: cursosUsuario,
-            existe: existe,
+        let lista = [];
+        CursoXUsuario.find({identificacionUsuario: req.session.idUsuario}, (err, result) =>{
+            if (err){
+                return console.log(err)
+            }
+            if (result.length==0){
+                return res.render('darme-baja',{
+                    datos:false
+                })
+            } else {
+                
+                result.forEach(cursoUsuario => {
+                    Curso.findOne({id: cursoUsuario.idCurso}, (err, result2)=>{
+                        if (err){
+                            return console.log(err)
+                        }
+                        if (result) {
+                            lista.push(result2);
+                        }
+                    })
+                })
+                return res.render('darme-baja', {
+                    datos: true,
+                    lista: lista
+                })
+            }
+            /* Solucion 2
+            else {
+                
+                result.forEach(cursoUsuario => {
+                    listaIds.push(cursoUsuario.idCurso)
+                })
+                console.log(listaIds);
+                Curso.find({id: {$in listaIds}}, (err, result2)=>{
+                        if (err){
+                            return console.log(err)
+                        }
+                        if (result2) {
+                            return res.render('darme-baja', {
+                                datos: true,
+                                lista: result2
+                            })
+                        }
+                    })
+                
+            }*/ 
         })
     })
 
