@@ -3,25 +3,6 @@
 	<div class="row justify-content-center">
 		<h2>Darme de baja</h2>
 	</div>
-  <!--
-	<div class="row p-3 mb-5">
-		<div class="col">
-		<form method="POST">
-			<div class="form-group row">
-				<div class=" col-3 pl-5 pt-2 mb-3">
-					<label for="idInput">Número de Identificación</label>
-				</div>
-				<div class="  col-7 p-1 mb-3">
-					<input id= "idInput" type="number" name="identificacion" class="form-control" placeholder="Ingrese su número de identificación" required>
-				</div>
-				<div class=" col-2 p-1 mb-3">
-					<button type="submit" class="btn btn-primary ">Consultar</button>
-				</div>
-			</div>
-		</form>	
-		</div>
-	</div> 
-  -->
 
 	{{#if datos}}
       <div class="container">
@@ -38,7 +19,7 @@
         		<tbody>
         		    {{#each lista as |item| }}
         	       	    <tr>
-        			        <td>{{item.id}}</th>
+        			        <td>{{item.id}}</td>
         			        <td>{{item.nombre}}</td>
         			        <td>{{item.modalidad}}</td>
         			        <td>{{item.intensidad}} horas</td>
@@ -49,8 +30,8 @@
     		</table>
 		</div>
     {{else}}
-      <div class="row justify-content-center">
-        <h3>Usted actualmente no está inscrito en ningún curso</h3>
+      <div class="row justify-content-center m-3 alert alert-warning">
+        <p>Usted actualmente no está inscrito en ningún curso</p>
       </div>
     {{/if}}
 </div>

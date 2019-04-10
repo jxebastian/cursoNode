@@ -107,45 +107,11 @@ app.route('/registro')
     })
 
 app.route('/darme-baja')
-    .get((req, res) => {
+    .get( (req, res) => {
         if (!res.locals.aspirante) {
             return res.redirect('/index');
         }
-        let lista = [];
-        function g (){
-            CursoXUsuario.find({ identificacionUsuario: req.session.idUsuario }, (err, result) => {
-                if (err) {
-                    return console.log(err)
-                }
-                if (result.length == 0) {
-                    return res.render('darme-baja', {
-                        datos: false
-                    })
-                } else {
-    
-                    result.forEach(cursoUsuario => {
-                        Curso.findOne({ id: cursoUsuario.idCurso }, (err, result2) => {
-                            if (err) {
-                                return console.log(err)
-                            }
-                            if (result) {
-                                lista.push(result2);
-                            }
-                        })
-                    })
-                    
-                }
-                return lista;
-            });
-        }
-        async function f(){
-            let l = await g();
-            console.log(lista);
-            console.log (l);
-        }
-        f();
-/*
-        CursoXUsuario.find({ identificacionUsuario: req.session.idUsuario }, (err, result) => {
+        Curso.find({ "estudiantes.identificacion" : req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
             }
@@ -154,49 +120,36 @@ app.route('/darme-baja')
                     datos: false
                 })
             } else {
-
-                result.forEach(cursoUsuario => {
-                    Curso.findOne({ id: cursoUsuario.idCurso }, (err, result2) => {
-                        if (err) {
-                            return console.log(err)
-                        }
-                        if (result) {
-                            lista.push(result2);
-                        }
-                    })
+                result.forEach(curso =>{
+                    curso.idUser = req.session.idUsuario
                 })
                 return res.render('darme-baja', {
                     datos: true,
-                    lista: lista
+                    lista: result
                 })
-            }
-            /* Solucion 2
-            else {
-                
-                result.forEach(cursoUsuario => {
-                    listaIds.push(cursoUsuario.idCurso)
-                })
-                console.log(listaIds);
-                Curso.find({id: {$in listaIds}}, (err, result2)=>{
-                        if (err){
-                            return console.log(err)
-                        }
-                        if (result2) {
-                            return res.render('darme-baja', {
-                                datos: true,
-                                lista: result2
-                            })
-                        }
-                    })
-                
             }
         })
-        */
     })
+
 
 app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     .get((req, res) => {
-        let usuario = funciones.obtenerUsuario(req.params.idUser);
+        Curso.findOne({id: req.params.idCurso},(err,result)=>{
+            if(err){
+                return console.log(err)
+            }
+            if (result){
+                let usuario = result.estudiantes.find(user => user.identificacion == req.params.idUser)
+                console.log(usuario)
+                return res.render('dar-baja',{
+                    eliminado: false,
+                    curso: result,
+                    usuario: usuario,
+                    lista: [result]
+                })
+            }
+        })
+        /*let usuario = funciones.obtenerUsuario(req.params.idUser);
         let cursos = funciones.obtenerCursos()
         let curso = cursos.find(curso => curso.id == req.params.idCurso)
         let lista = [curso]
@@ -205,10 +158,19 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
             usuario: usuario,
             curso: curso,
             lista: lista,
-        })
+        })*/
     })
     .post((req, res) => {
-        let usuario = funciones.obtenerUsuario(req.params.idUser);
+        Curso.findOneAndUpdate({id: req.params.idCurso},{$pull: {'estudiantes': {identificacion: req.params.idUser}}}, (err,result)=>{
+            if (err){
+                return console.log(err)
+            }
+            return res.render('dar-baja',{
+                eliminado: true,
+                mensaje: 'Usted ya no se encuentra matriculado en el curso.'
+            })
+        })
+        /*let usuario = funciones.obtenerUsuario(req.params.idUser);
         let cursos = funciones.obtenerCursos()
         let curso = cursos.find(curso => curso.id == req.params.idCurso)
         funciones.eliminarCursoXUsuario(curso.id, usuario.identifion)
@@ -217,7 +179,7 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
             usuario: usuario,
             curso: curso,
             lista: [],
-        })
+        })*/
     })
 
 app.get('/roles-usuarios', (req, res) => {
@@ -594,4 +556,4 @@ app.get('*', (req, res) => {
         titulo: "Error 404",
     })
 });
-module.exports = app;
+module.exports = app

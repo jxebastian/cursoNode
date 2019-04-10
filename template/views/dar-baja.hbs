@@ -3,18 +3,20 @@
 
 		{{#if eliminado}}
 			<div class="row justify-content-center m-3 alert alert-success">
-				<p>Usted ya no se encuentra inscrito en el curso {{curso.nombre}}</p>
+				<p>{{mensaje}}</p>
 			</div>
 			<div class="row justify-content-center m-3">
 				<div class="col d-flex justify-content-center">
 					<a href="/darme-baja/" class="btn btn-primary">Regresar</a>
 				</div>
 			</div>
+
 		{{else}}
+
 			<div class="row justify-content-center m-3 alert alert-warning">
 				<p>Atención: Señor(a) {{usuario.nombre}}, usted está matriculado en el curso {{curso.nombre}}, ¿Seguro que quiere darse de baja?</p>
 			</div>
-			{{{listarCursosInteresado lista}}}
+			{{{listarCursos lista}}}
 			<div class="row justify-content-center m-3">
 				<div class="col d-flex justify-content-end">
 					<a href="/darme-baja/" class="btn btn-primary">Regresar</a>
