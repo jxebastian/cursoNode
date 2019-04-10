@@ -128,9 +128,8 @@ app.route('/darme-baja')
                     lista: result
                 })
             }
-            }
         })
-
+    })
 
 app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     .get((req, res) => {
