@@ -108,23 +108,56 @@ app.route('/registro')
 
 app.route('/darme-baja')
     .get((req, res) => {
-        if(!res.locals.aspirante){
+        if (!res.locals.aspirante) {
             return res.redirect('/index');
         }
         let lista = [];
-        CursoXUsuario.find({identificacionUsuario: req.session.idUsuario}, (err, result) =>{
-            if (err){
+        function g (){
+            CursoXUsuario.find({ identificacionUsuario: req.session.idUsuario }, (err, result) => {
+                if (err) {
+                    return console.log(err)
+                }
+                if (result.length == 0) {
+                    return res.render('darme-baja', {
+                        datos: false
+                    })
+                } else {
+    
+                    result.forEach(cursoUsuario => {
+                        Curso.findOne({ id: cursoUsuario.idCurso }, (err, result2) => {
+                            if (err) {
+                                return console.log(err)
+                            }
+                            if (result) {
+                                lista.push(result2);
+                            }
+                        })
+                    })
+                    
+                }
+                return lista;
+            });
+        }
+        async function f(){
+            let l = await g();
+            console.log(lista);
+            console.log (l);
+        }
+        f();
+/*
+        CursoXUsuario.find({ identificacionUsuario: req.session.idUsuario }, (err, result) => {
+            if (err) {
                 return console.log(err)
             }
-            if (result.length==0){
-                return res.render('darme-baja',{
-                    datos:false
+            if (result.length == 0) {
+                return res.render('darme-baja', {
+                    datos: false
                 })
             } else {
-                
+
                 result.forEach(cursoUsuario => {
-                    Curso.findOne({id: cursoUsuario.idCurso}, (err, result2)=>{
-                        if (err){
+                    Curso.findOne({ id: cursoUsuario.idCurso }, (err, result2) => {
+                        if (err) {
                             return console.log(err)
                         }
                         if (result) {
@@ -156,8 +189,9 @@ app.route('/darme-baja')
                         }
                     })
                 
-            }*/ 
+            }
         })
+        */
     })
 
 app.route('/dar-baja/:idUser' + '-' + ':idCurso')
@@ -187,7 +221,7 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
     })
 
 app.get('/roles-usuarios', (req, res) => {
-    if(!res.locals.coordinador){
+    if (!res.locals.coordinador) {
         return res.redirect('/index');
     }
     Usuario.find({ rol: ['Aspirante', 'Docente'] }, (err, result) => {
@@ -209,7 +243,7 @@ app.get('/roles-usuarios', (req, res) => {
 
 app.route('/editar-usuario/:id')
     .get((req, res) => {
-        if(!res.locals.coordinador){
+        if (!res.locals.coordinador) {
             return res.redirect('/index');
         }
         Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
@@ -263,7 +297,7 @@ app.route('/editar-usuario/:id')
 
 app.route('/cambiar-rol/:id')
     .get((req, res) => {
-        if(!res.locals.coordinador){
+        if (!res.locals.coordinador) {
             return res.redirect('/index');
         }
         Usuario.findOne({ identificacion: req.params.id }, (err, result) => {
@@ -333,7 +367,7 @@ app.get('/cursos', (req, res) => {
             })
         });
     } else if (res.locals.docente) {
-        Curso.find({identificacionDocente: req.session.idUsuario}, (err, cursos) => {
+        Curso.find({ identificacionDocente: req.session.idUsuario }, (err, cursos) => {
             if (err) {
                 return console.log(err);
             }
@@ -381,6 +415,29 @@ app.route('/inscribir-curso/:id')
         })
     })
     .post((req, res) => {
+        Usuario.findOne({identificacion: req.session.idUsuario}, (err, usuario) => {
+            if(err) {
+                return console.log(err);
+            }
+            if (usuario) {
+                let estudiante = {
+                    identificacion: usuario.identificacion,
+                    nombre: usuario.nombre,
+                    correo: usuario.correo,
+                    telefono: usuario.telefono
+                }
+                Curso.updateOne({id: req.params.id},{$push: {estudiantes: estudiante}}, (err, result) => {
+                    if(err) {
+                        return console.log(err)
+                    }
+                    return res.render('inscribir-curso', {
+                        exito: true,
+                        mensaje: 'Registro al curso exitosamente'
+                    })
+                })
+            }
+        });
+        /*
         CursoXUsuario.findOne({ idCurso: req.params.id, identificacionUsuario: req.session.idUsuario },
             (err, resultado) => {
                 if (err) {
@@ -417,6 +474,7 @@ app.route('/inscribir-curso/:id')
                     })
                 }
             })
+            */
     });
 
 app.route('/desmatricular/:idCurso' + '-' + ':idUser')
@@ -425,7 +483,7 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
             return res.redirect('/');
         }
         if (!res.locals.coordinador) {
-          res.render('index', {});
+            res.render('index', {});
         }
         Curso.findOne({ id: req.params.idCurso }, (err, resultCurso) => {
             if (err) {
@@ -464,12 +522,12 @@ app.route('/registroCurso')
     })
     .post((req, res) => {
         let curse = new Curso({
-            id:  parseInt(req.body.id),
+            id: parseInt(req.body.id),
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
-            valor:  parseInt(req.body.valor),
+            valor: parseInt(req.body.valor),
             modalidad: req.body.modalidad,
-            intensidad:  parseInt(req.body.intensidad),
+            intensidad: parseInt(req.body.intensidad),
             estado: 'disponible'
         })
         Curso.findOne({ id: curse.id }, (err, result) => {
@@ -531,9 +589,9 @@ app.get('/salir', (req, res) => {
     res.redirect('/')
 })
 
-app.get('*',(req,res)=> {
-	res.render('error', {
-		titulo: "Error 404",
-	})
+app.get('*', (req, res) => {
+    res.render('error', {
+        titulo: "Error 404",
+    })
 });
 module.exports = app;

@@ -3,40 +3,54 @@ var uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 const cursoSchema = new Schema({
-	id : {
-		type : Number,
-		required : true
+	id: {
+		type: Number,
+		required: true
 	},
-	nombre : {
-		type : String,
-		required : true
+	nombre: {
+		type: String,
+		required: true
 	},
-  descripcion : {
-		type : String,
-		required : true
+	descripcion: {
+		type: String,
+		required: true
 	},
-  valor : {
-		type : Number,
-		required : true,
-    min: 0
+	valor: {
+		type: Number,
+		required: true,
+		min: 0
 	},
-  modalidad : {
-		type : String,
-		enum: {values: ['virtual', 'presencial']},
-		required : true
+	modalidad: {
+		type: String,
+		enum: { values: ['virtual', 'presencial'] },
+		required: true
 	},
-	intensidad : {
+	intensidad: {
 		type: Number,
 		default: 0,
 		min: 0
 	},
-	estado : {
+	estado: {
 		type: String,
-		enum: {values: ['disponible', 'no disponible']}
+		enum: { values: ['disponible', 'no disponible'] }
 	},
 	identificacionDocente: {
 		type: Number
-	}
+	},
+	estudiantes: [{
+		identificacion: {
+			type: Number
+		},
+		nombre: {
+			type: String
+		},
+		correo: {
+			type: String
+		},
+		telefono: {
+			type: Number
+		}
+	}]
 });
 
 cursoSchema.plugin(uniqueValidator);
