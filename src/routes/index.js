@@ -501,14 +501,6 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
                 eliminado: true
             });
         });
-        // CursoXUsuario.findOneAndDelete({ idCurso: req.params.idCurso, identificacionUsuario: req.params.idUser }, (err, result) => {
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        //     res.render('desmatricular', {
-        //         eliminado: true
-        //     });
-        // });
     })
 
 app.route('/registroCurso')
