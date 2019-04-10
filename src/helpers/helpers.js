@@ -2,9 +2,16 @@ const hbs = require('hbs');
 const funciones = require('./../funciones');
 const CursoXUsuario = require('./../models/cursoXusuario');
 
+const mostrarBotonInscribirme = (coordinador, curso) => {
+  if (!coordinador) {
+    return `<a href= "/inscribir-curso/${curso}" class="btn btn-primary" >Inscribirse al curso</a> <br><br>`;;
+  } else {
+    return "";
+  }
+}
+
 const listarEstudiantes = (estudiantes, curso) => {
   let texto = "";
-  estudiantes = estudiantes.filter(doc => doc.idCurso == curso);
   if (estudiantes.length == 0) {
     texto = "No hay estudiantes matriculados en este curso";
   } else {
@@ -23,11 +30,11 @@ const listarEstudiantes = (estudiantes, curso) => {
     let i = 1;
     estudiantes.forEach(estudiante => {
       texto = texto + `<tr>
-                        <th scope="row">${estudiante.identificacionUsuario}</th>
-                        <td>${estudiante.nombreUsuario}</td>
-                        <td>${estudiante.telefonoUsuario}</td>
-                        <td>${estudiante.correoUsuario}</td>
-                        <td><a href="/desmatricular/${curso}-${estudiante.identificacionUsuario}" class="btn btn-danger">Desmatricular</a></td>
+                        <th scope="row">${estudiante.identificacion}</th>
+                        <td>${estudiante.nombre}</td>
+                        <td>${estudiante.telefono}</td>
+                        <td>${estudiante.correo}</td>
+                        <td><a href="/desmatricular/${curso}-${estudiante.identificacion}" class="btn btn-danger">Desmatricular</a></td>
                       </tr>`;
       i = i + 1;
     });
@@ -38,7 +45,6 @@ const listarEstudiantes = (estudiantes, curso) => {
 
 const listarEstudiantesDocente = (estudiantes, curso) => {
   let texto = "";
-  estudiantes = estudiantes.filter(doc => doc.idCurso == curso);
   if (estudiantes.length == 0) {
     texto = "No hay estudiantes matriculados en este curso";
   } else {
@@ -56,10 +62,10 @@ const listarEstudiantesDocente = (estudiantes, curso) => {
     let i = 1;
     estudiantes.forEach(estudiante => {
       texto = texto + `<tr>
-                        <th scope="row">${estudiante.identificacionUsuario}</th>
-                        <td>${estudiante.nombreUsuario}</td>
-                        <td>${estudiante.telefonoUsuario}</td>
-                        <td>${estudiante.correoUsuario}</td>
+                        <th scope="row">${estudiante.identificacion}</th>
+                        <td>${estudiante.nombre}</td>
+                        <td>${estudiante.telefono}</td>
+                        <td>${estudiante.correo}</td>
                       </tr>`;
       i = i + 1;
     });
@@ -68,7 +74,7 @@ const listarEstudiantesDocente = (estudiantes, curso) => {
   return texto;
 };
 
-hbs.registerHelper('listarCursosInteresado', (cursos) => {
+hbs.registerHelper('listarCursosInteresado', (cursos, rol) => {
   if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
@@ -80,6 +86,7 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
         "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
         "<b> Valor: </b> " + curso.valor + " pesos." + "<br><br>" +
+        mostrarBotonInscribirme(rol, curso.id);
         `<a href= "/inscribir-curso/${curso.id}" class="btn btn-primary" >Inscribirse al curso</a> <br><br>`;
       texto = texto +
         `<div class="card">
@@ -105,7 +112,7 @@ hbs.registerHelper('listarCursosInteresado', (cursos) => {
   }
 });
 
-hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
+hbs.registerHelper('listarCursosCoordinador', (cursos) => {
   if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
@@ -113,7 +120,7 @@ hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
       let cabecera = curso.nombre + "<br>" +
         curso.descripcion + "<br>" +
         curso.valor + " pesos.";
-      listaEstudiantes = listarEstudiantes(cursoXUsuario, curso.id);
+      listaEstudiantes = listarEstudiantes(curso.estudiantes, curso.id);
       let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
         "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
@@ -147,7 +154,7 @@ hbs.registerHelper('listarCursosCoordinador', (cursos, cursoXUsuario) => {
   }
 });
 
-hbs.registerHelper('listarCursosDocente', (cursos, cursoXUsuario) => {
+hbs.registerHelper('listarCursosDocente', (cursos) => {
   if (cursos.length > 0) {
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
@@ -155,7 +162,7 @@ hbs.registerHelper('listarCursosDocente', (cursos, cursoXUsuario) => {
       let cabecera = curso.nombre + "<br>" +
         curso.descripcion + "<br>" +
         curso.valor + " pesos.";
-      listaEstudiantes = listarEstudiantesDocente(cursoXUsuario, curso.id);
+      listaEstudiantes = listarEstudiantesDocente(curso.estudiantes, curso.id);
       let contenido = "<b> Descripción: </b> " + curso.descripcion + ".<br>" +
         "<b> Modalidad: </b> " + curso.modalidad + ".<br>" +
         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +

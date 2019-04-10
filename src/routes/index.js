@@ -128,8 +128,8 @@ app.route('/darme-baja')
                     lista: result
                 })
             }
+            }
         })
-    })
 
 
 app.route('/dar-baja/:idUser' + '-' + ':idCurso')
@@ -149,16 +149,6 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
                 })
             }
         })
-        /*let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        let lista = [curso]
-        res.render('dar-baja', {
-            eliminado: false,
-            usuario: usuario,
-            curso: curso,
-            lista: lista,
-        })*/
     })
     .post((req, res) => {
         Curso.findOneAndUpdate({id: req.params.idCurso},{$pull: {'estudiantes': {identificacion: req.params.idUser}}}, (err,result)=>{
@@ -170,16 +160,6 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
                 mensaje: 'Usted ya no se encuentra matriculado en el curso.'
             })
         })
-        /*let usuario = funciones.obtenerUsuario(req.params.idUser);
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        funciones.eliminarCursoXUsuario(curso.id, usuario.identifion)
-        res.render('dar-baja', {
-            eliminado: true,
-            usuario: usuario,
-            curso: curso,
-            lista: [],
-        })*/
     })
 
 app.get('/roles-usuarios', (req, res) => {
@@ -318,30 +298,18 @@ app.get('/cursos', (req, res) => {
             if (err) {
                 return console.log(err);
             }
-            CursoXUsuario.find({}, (err, cursoXUsuario) => {
-                if (err) {
-                    return console.log(err);
-                }
-                res.render('cursos', {
-                    cursos: cursos,
-                    cursoXUsuario: cursoXUsuario
-                });
-            })
+            res.render('cursos', {
+                cursos: cursos
+            });
         });
     } else if (res.locals.docente) {
         Curso.find({ identificacionDocente: req.session.idUsuario }, (err, cursos) => {
             if (err) {
                 return console.log(err);
             }
-            CursoXUsuario.find({}, (err, cursoXUsuario) => {
-                if (err) {
-                    return console.log(err);
-                }
-                res.render('cursos', {
-                    cursos: cursos,
-                    cursoXUsuario: cursoXUsuario
-                });
-            })
+            res.render('cursos', {
+                cursos: cursos
+            });
         });
     } else {
         Curso.find({ estado: 'disponible' }, (err, results) => {
@@ -350,6 +318,7 @@ app.get('/cursos', (req, res) => {
             }
             res.render('cursos', {
                 cursos: results,
+                rol: res.locals.coordinador
             });
         });
     };
@@ -457,6 +426,7 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
                 }
                 res.render('desmatricular', {
                     eliminado: false,
+                    rol: res.locals.coordinador,
                     usuario: resultUser,
                     curso: resultCurso,
                     lista: [resultCurso]
@@ -465,7 +435,7 @@ app.route('/desmatricular/:idCurso' + '-' + ':idUser')
         });
     })
     .post((req, res) => {
-        CursoXUsuario.findOneAndDelete({ idCurso: req.params.idCurso, identificacionUsuario: req.params.idUser }, (err, result) => {
+        Curso.findOneAndUpdate({id: req.params.idCurso},{$pull: {estudiantes: {identificacion: req.params.idUser}}}, (err, result) =>{
             if (err) {
                 console.log(err);
             }

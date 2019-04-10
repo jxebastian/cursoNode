@@ -1,13 +1,13 @@
 {{>header}}
 <div class="container">
   {{#if aspirante}}
-    {{{listarCursosInteresado cursos}}}
+    {{{listarCursosInteresado cursos rol}}}
   {{/if}}
   {{#if coordinador}}
-    {{{listarCursosCoordinador cursos cursoXUsuario}}}
+    {{{listarCursosCoordinador cursos}}}
   {{/if}}
   {{#if docente}}
-    {{{listarCursosDocente cursos cursoXUsuario}}}
+    {{{listarCursosDocente cursos}}}
   {{/if}}
 </div>
 
