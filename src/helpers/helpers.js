@@ -1,6 +1,4 @@
 const hbs = require('hbs');
-const funciones = require('./../funciones');
-const CursoXUsuario = require('./../models/cursoXusuario');
 
 const mostrarBotonInscribirme = (coordinador, curso) => {
   if (!coordinador) {

@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const Usuario = require('./models/usuario');
 const Curso = require('./models/curso');
-const CursoXUsuario = require('./models/cursoXusuario');
 
 listaUsuarios = [];
 listaCursos = [];

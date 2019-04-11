@@ -6,14 +6,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session')
-var MemoryStore = require('memorystore')(session)
-
-const LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./scratch');
+var MemoryStore = require('memorystore')(session);
 
 //paths
 const dirPublico = path.join(__dirname, '../public');
-const dirNode_modules = path.join(__dirname, '../node_modules')
+const dirNode_modules = path.join(__dirname, '../node_modules');
 
 //static
 app.use(express.static(dirPublico));
