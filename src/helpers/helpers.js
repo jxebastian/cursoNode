@@ -230,3 +230,23 @@ hbs.registerHelper('listarCursos', (cursos) => {
     return "<h1>No hay cursos por mostrar</h1>";
   }
 });
+
+hbs.registerHelper('listarDocentes', (docentes) => {
+   if (docentes.length > 0) {
+    let opciones = ""
+    docentes.forEach(docente => {
+      opciones = opciones + "<option value=" + docente.identificacion + ">" + docente.nombre + "</option>"
+    });
+    texto = 
+            `<div class="form-group">
+                <label>Seleccionar docente :<br>
+                    <select class="custom-select" id="modlabel" name="docente" required>
+                      ${opciones}
+                    </select>
+               </label>
+            </div>`;
+    return texto;
+  } else {
+    return "<h1>No hay docentes por mostrar</h1>";
+  }
+});

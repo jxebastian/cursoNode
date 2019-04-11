@@ -491,26 +491,41 @@ app.route('/registroCurso')
     })
 app.route('/estado/:idCurso')
     .get((req, res) => {
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        let lista = [curso];
-        res.render('estado', {
-            cerrado: false,
-            curso: curso,
-            lista: lista
+        if (!res.locals.coordinador) {
+            return res.redirect('/index');
+        }
+        Curso.findOne({ id: req.params.idCurso }, (err, resultCur) => {
+            if (err) {
+                return console.log(err);
+            }
+             else {
+                Usuario.find({ rol: "Docente" }, (err, resultDoc) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                     else {
+                        let docentes = resultDoc;
+                        let lista = [resultCur] 
+                        res.render('estado', {
+                            cerrado: false,
+                            curso: resultCur,
+                            lista: lista,
+                            docentes: docentes
+                        }) 
+                    }
+                })
+            }
         })
     })
     .post((req, res) => {
-        let session = JSON.parse(localStorage.getItem('session'));
-        let cursos = funciones.obtenerCursos()
-        let curso = cursos.find(curso => curso.id == req.params.idCurso)
-        funciones.cambiarEstadoCurso(curso)
-        res.render('estado', {
-            cerrado: true,
-            curso: curso,
-            coordinador: session.coordinador,
-            aspirante: session.aspirante
-        })
+        Curso.findOneAndUpdate({id: req.params.idCurso},{identificacionDocente: req.body.docente, estado: "no disponible"},{upsert: true}, (err, result) =>{
+            if (err) {
+                console.log(err);
+            }
+            res.render('estado', {
+                cerrado: true
+            })
+        });
     })
 
 app.get('/salir', (req, res) => {
