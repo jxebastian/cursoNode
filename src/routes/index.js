@@ -137,7 +137,6 @@ app.route('/dar-baja/:idUser' + '-' + ':idCurso')
             }
             if (result) {
                 let usuario = result.estudiantes.find(user => user.identificacion == req.params.idUser)
-                console.log(usuario)
                 return res.render('dar-baja', {
                     eliminado: false,
                     curso: result,
