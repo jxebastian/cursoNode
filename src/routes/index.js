@@ -12,8 +12,7 @@ const Usuario = require('./../models/usuario');
 const Curso = require('./../models/curso');
 //helpers
 require('./../helpers/helpers');
-//funciones
-const funciones = require('./../funciones');
+
 
 //hbs
 app.set('view engine', 'hbs')
