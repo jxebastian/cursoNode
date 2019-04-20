@@ -5,6 +5,8 @@ const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
 const sgMail = require('@sendgrid/mail');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 //paths
 const dirViews = path.join(__dirname, '../../template/views');
 const dirPartials = path.join(__dirname, '../../template/partials');

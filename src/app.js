@@ -53,7 +53,7 @@ app.use((req, res, next) => {
       default:
         break;
     }
-    res.locals.coordinador = coordinador;
+    res.locals.coordinador = coordinador; 
     res.locals.aspirante = aspirante;
     res.locals.docente = docente;
   }
