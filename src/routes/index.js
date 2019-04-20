@@ -4,6 +4,8 @@ const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 //paths
 const dirViews = path.join(__dirname, '../../template/views');
 const dirPartials = path.join(__dirname, '../../template/partials');
@@ -231,7 +233,7 @@ app.route('/editar-usuario/:id')
                 })
             }
         );
-        Curso.updateMany({"estudiantes.identificacion": req.params.id}, 
+        Curso.updateMany({"estudiantes.identificacion": req.params.id},
         {"estudiantes.$":{
             identificacion: req.params.id,
             nombre: req.body.nombre,
@@ -486,13 +488,13 @@ app.route('/estado/:idCurso')
                     }
                      else {
                         let docentes = resultDoc;
-                        let lista = [resultCur] 
+                        let lista = [resultCur]
                         res.render('estado', {
                             cerrado: false,
                             curso: resultCur,
                             lista: lista,
                             docentes: docentes
-                        }) 
+                        })
                     }
                 })
             }
