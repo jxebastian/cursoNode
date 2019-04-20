@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const hbs = require('hbs');
 const bcrypt = require('bcrypt');
+const sgMail = require('@sendgrid/mail');
 //paths
 const dirViews = path.join(__dirname, '../../template/views');
 const dirPartials = path.join(__dirname, '../../template/partials');
@@ -231,16 +232,19 @@ app.route('/editar-usuario/:id')
                 })
             }
         );
-        Curso.updateMany({"estudiantes.identificacion": req.params.id}, 
-        {"estudiantes.$":{
-            identificacion: req.params.id,
-            nombre: req.body.nombre,
-            correo: req.body.correo,
-            telefono: req.body.telefono}}, (err, result) => {
-                if(err){
+        Curso.updateMany({ "estudiantes.identificacion": req.params.id },
+            {
+                "estudiantes.$": {
+                    identificacion: req.params.id,
+                    nombre: req.body.nombre,
+                    correo: req.body.correo,
+                    telefono: req.body.telefono
+                }
+            }, (err, result) => {
+                if (err) {
                     return console.log(err);
                 }
-        })
+            })
     })
 
 app.route('/cambiar-rol/:id')
@@ -479,30 +483,56 @@ app.route('/estado/:idCurso')
             if (err) {
                 return console.log(err);
             }
-             else {
+            else {
                 Usuario.find({ rol: "Docente" }, (err, resultDoc) => {
                     if (err) {
                         return console.log(err);
                     }
-                     else {
+                    else {
                         let docentes = resultDoc;
-                        let lista = [resultCur] 
+                        let lista = [resultCur]
                         res.render('estado', {
                             cerrado: false,
                             curso: resultCur,
                             lista: lista,
                             docentes: docentes
-                        }) 
+                        })
                     }
                 })
             }
         })
     })
     .post((req, res) => {
-        Curso.findOneAndUpdate({id: req.params.idCurso},{identificacionDocente: req.body.docente, estado: "no disponible"},{upsert: true}, (err, result) =>{
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        Curso.findOneAndUpdate({ id: req.params.idCurso }, { identificacionDocente: req.body.docente, estado: "no disponible" }, { upsert: true }, (err, result) => {
             if (err) {
                 console.log(err);
             }
+            let to = []
+            result.estudiantes.forEach(estudiante => {
+                to.push(estudiante.correo);
+            });
+            let msg = {
+                to: to,
+                from: 'johan2825@gmail.com',
+                subject: 'Inicio de curso ' + result.nombre,
+                text: 'Ya damos por empezado el curso al que te inscribiste en educación continua',
+            };
+            sgMail.send(msg);
+            Usuario.findOne({ identificacion: req.body.docente }, (err, docente) => {
+                if (err) {
+                    return console.log(err);
+                }
+                let msg = {
+                    to: docente.correo,
+                    from: 'johan2825@gmail.com',
+                    subject: 'Inicio de curso ' + result.nombre,
+                    text: 'usted a sido designado a cargo del siguiente curso \n' +
+                    'nombre: ' + result.nombre +  ' descripción: '+ result.descripcion + 
+                    ' intensidad: ' + result.intensidad,
+                };
+                sgMail.send(msg);
+            })
             res.render('estado', {
                 cerrado: true
             })
@@ -521,4 +551,5 @@ app.get('*', (req, res) => {
         titulo: "Error 404",
     })
 });
+
 module.exports = app
