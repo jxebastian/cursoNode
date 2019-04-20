@@ -107,7 +107,7 @@ app.route('/registro')
         })
     })
 
-app.route('/darme-baja')
+app.route('/mis-cursos')
     .get((req, res) => {
         if (!res.locals.aspirante) {
             return res.redirect('/index');
@@ -117,14 +117,14 @@ app.route('/darme-baja')
                 return console.log(err)
             }
             if (result.length == 0) {
-                return res.render('darme-baja', {
+                return res.render('mis-cursos', {
                     datos: false
                 })
             } else {
                 result.forEach(curso => {
                     curso.idUser = req.session.idUsuario
                 })
-                return res.render('darme-baja', {
+                return res.render('mis-cursos', {
                     datos: true,
                     lista: result
                 })
