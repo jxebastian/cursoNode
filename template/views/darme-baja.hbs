@@ -1,0 +1,38 @@
+{{>header}}
+<div class="container">
+	<div class="row justify-content-center">
+		<h2>Darme de baja</h2>
+	</div>
+
+	{{#if datos}}
+      <div class="container">
+    		<table class="table table-striped">
+       			<thead>
+       			    <tr>
+       			        <th scope="col">Id del curso</th>
+       			        <th scope="col">Nombre</th>
+       			        <th scope="col">Modalidad</th>
+       			        <th scope="col">Intensidad</th>
+       			        <th scope="col"></th>
+       			    </tr>
+       			</thead>
+        		<tbody>
+        		    {{#each lista as |item| }}
+        	       	    <tr>
+        			        <td>{{item.id}}</td>
+        			        <td>{{item.nombre}}</td>
+        			        <td>{{item.modalidad}}</td>
+        			        <td>{{item.intensidad}} horas</td>
+        			        <td><a href="/dar-baja/{{item.idUser}}-{{item.id}}" class="btn btn-danger">Darme de baja</a></td>
+        			    </tr>
+        		    {{/each}}                  
+        		</tbody>
+    		</table>
+		</div>
+    {{else}}
+      <div class="row justify-content-center m-3 alert alert-warning">
+        <p>Usted actualmente no está inscrito en ningún curso</p>
+      </div>
+    {{/if}}
+</div>
+{{>footer}}

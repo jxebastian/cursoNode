@@ -1,6 +1,7 @@
 {{>header}}
-<div class="container">
+<div class="container roles">
     <h3>Gestionar roles de los usuarios</h3>
+    {{#if datos}}
     <table class="table table-striped">
         <thead>
             <tr>
@@ -24,10 +25,12 @@
                 <td><a href="editar-usuario/{{item.identificacion}}" class="btn btn-primary">Actualizar</a></td>
                 <td><a href="cambiar-rol/{{item.identificacion}}" class="btn btn-primary">Cambiar rol</a></td>
             </tr>
-            {{else}}
-                <h4>No hay usuarios</h4>
             {{/each}}
         </tbody>
     </table>
+    {{else}}
+    <br>
+    <h4>No hay usuarios</h4>
+    {{/if}}
 </div>
 {{>footer}}

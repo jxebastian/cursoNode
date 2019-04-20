@@ -1,41 +1,44 @@
 {{>header}}
 <div class="container">
-    {{#if datos}}
-        {{#if actualizado}}
-            <div class="alert alert-success" role="alert">
-                Actualizado sitifatoriamente
-            </div>
-        {{else}}
-            <div class="alert alert-danger" role="alert">
-                Hubo un error
-            </div>
-        {{/if}}
+    {{#if existe}}
+    {{#if actualizado}}
+    <div class="alert alert-success" role="alert">
+        {{mensaje}}
+    </div>
     {{/if}}
     <div class="row justify-content-center">
-        <div class= "col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
+        <div class="col-sm-7 shadow-lg p-3 mb-5 bg-white rounded">
             <h3>Actualizar usuario</h3>
             <form action="" method="post" class="regForm">
                 <div class="form-group">
                     <label for="nombre">Identifición</label>
                     <input type="numbre" class="form-control" id="identificacion" name="identificacion"
-                            value="{{usuario.identificacion}}" readonly>
+                        value="{{usuario.identificacion}}" readonly>
                 </div>
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{usuario.nombre}}" required>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{usuario.nombre}}"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="correo">Correo</label>
-                    <input type="email" class="form-control" id="correo" name="correo" value="{{usuario.correo}}" required>
+                    <input type="email" class="form-control" id="correo" name="correo" value="{{usuario.correo}}"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="telefono">Telefono</label>
-                    <input type="number" class="form-control" id="telefono" name="telefono" value="{{usuario.telefono}}" required>
+                    <input type="number" class="form-control" id="telefono" name="telefono" value="{{usuario.telefono}}"
+                        required>
                 </div>
                 <a href="/roles-usuarios" class="btn btn-primary">Regresar</a>
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </form>
         </div>
     </div>
+    {{else}}
+    <div class="alert alert-danger" role="alert">
+        {{mensaje}}
+    </div>
+    {{/if}}
 </div>
 {{>footer}}

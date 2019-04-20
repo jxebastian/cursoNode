@@ -1,0 +1,24 @@
+{{>header}}
+<div class="container">
+    {{#if alerta}}
+        <div class="alert alert-danger" role="alert">
+            {{mensaje}}
+        </div>
+    {{/if}}
+
+    <div class="row justify-content-center login">
+        <div class="col-sm-4 shadow-lg p-3 mb-5 bg-white rounded">
+            <h3>Ingreso</h3>
+            <form action="" method="post" class="regForm">
+                <input type="number" class="form-control" name="identificacion" placeholder="Ingrese identificación"
+                    required>
+                <br>
+                <input type="password" class="form-control" name="password" placeholder="Contraseña" required>
+                <br>
+                <button type="submit" class="btn btn-primary">Ingresar</button>
+                <a href="/registro" class="btn btn-primary">Registrarse</a>
+            </form>
+        </div>
+    </div>
+</div>
+{{>footer}}
