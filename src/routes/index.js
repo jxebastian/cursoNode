@@ -23,7 +23,7 @@ app.set('view engine', 'hbs')
 app.set('views', dirViews)
 hbs.registerPartials(dirPartials)
 
-var upload = multer({ })
+var upload = multer({})
 
 app.route('/')
     .get((req, res) => {
@@ -545,19 +545,19 @@ app.route('/estado/:idCurso')
     })
 
 app.get('/curso/:idCurso/', (req, res) => {
-    if(res.locals.docente) {
-        Curso.findOne({id: req.params.idCurso, identificacionDocente: req.session.idUsuario}, (err, result) => {
+    if (res.locals.docente) {
+        Curso.findOne({ id: req.params.idCurso, identificacionDocente: req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
             }
-            if (result){
+            if (result) {
                 let lista = []
                 let vacio = true
-                if(result.contenido){
-                   lista = result.contenido
-                   if (lista.length>0){
+                if (result.contenido) {
+                    lista = result.contenido
+                    if (lista.length > 0) {
                         vacio = false
-                   }
+                    }
                 }
                 return res.render('ver-curso', {
                     adscrito: true,
@@ -569,18 +569,18 @@ app.get('/curso/:idCurso/', (req, res) => {
             }
         })
     }
-    if(res.locals.aspirante) {
-        Curso.findOne({id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario}, (err, result)=>{
-            if (err){
+    if (res.locals.aspirante) {
+        Curso.findOne({ id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario }, (err, result) => {
+            if (err) {
                 return console.log(err)
             }
             if (result) {
                 let lista = result.contenido;
                 let vacio = false;
-                if(lista.length == 0){
+                if (lista.length == 0) {
                     vacio = true
                 }
-                return res.render('ver-curso',{
+                return res.render('ver-curso', {
                     adscrito: true,
                     docente: false,
                     curso: result,
@@ -590,48 +590,46 @@ app.get('/curso/:idCurso/', (req, res) => {
             }
         })
     }
-    Curso.findOne({id: req.params.idCurso}, (err, result)=>{
-        if (err){
+    Curso.findOne({ id: req.params.idCurso }, (err, result) => {
+        if (err) {
             return console.log(err)
         }
-        if (result){
-            return res.render('ver-curso',{
+        if (result) {
+            return res.render('ver-curso', {
                 curso: result,
                 adscrito: false
             })
         }
-        
+
     })
-    
-    
+
+
 })
 
-app.get('/curso/' + ":idCurso" + "/new",  (req, res) => {
-    res.render('nueva-entrada', {
-        uploaded: false
-    })    
-})
-
-var upload = multer({ })
-app.post("/curso/" + ":idCurso" + "/new", upload.single('archivo') , (req, res) => {
-    console.log(req.files)
-    console.log(req.body.titulo)
-    /*let contenido = {
-        titulo: req.body.titulo,
-        descripcion: req.body.descripcion,
-        archivo: [req.file.buffer]
-    }
-    Curso.findOneAndUpdate({id: req.params.idCurso},{$push: {'contenido': contenido}}, (err,result) =>{
-        if (err){
-            return console.log(err)
+app.route('/curso/:idCurso/new')
+    .get((req, res) => {
+        res.render('nueva-entrada');
+    })
+    .post(upload.single('archivo'),(req, res) => {
+        console.log(req.file)
+        console.log(req.body);
+        res.send('ok');
+        /*let contenido = {
+            titulo: req.body.titulo,
+            descripcion: req.body.descripcion,
+            archivo: [req.file.buffer]
         }
-        if (result){
-            return res.render('nueva-entrada', {
-                uploaded: true
-            })
-        }
-    })*/
-})
+        Curso.findOneAndUpdate({id: req.params.idCurso},{$push: {'contenido': contenido}}, (err,result) =>{
+            if (err){
+                return console.log(err)
+            }
+            if (result){
+                return res.render('nueva-entrada', {
+                    uploaded: true
+                })
+            }
+        })*/
+    })
 
 app.get('/salir', (req, res) => {
     req.session.destroy((err) => {
