@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const sgMail = require('@sendgrid/mail');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const multer = require('multer')
 //paths
 const dirViews = path.join(__dirname, '../../template/views');
 const dirPartials = path.join(__dirname, '../../template/partials');
@@ -21,6 +22,8 @@ require('./../helpers/helpers');
 app.set('view engine', 'hbs')
 app.set('views', dirViews)
 hbs.registerPartials(dirPartials)
+
+var upload = multer({ })
 
 app.route('/')
     .get((req, res) => {
@@ -540,6 +543,95 @@ app.route('/estado/:idCurso')
             })
         });
     })
+
+app.get('/curso/:idCurso/', (req, res) => {
+    if(res.locals.docente) {
+        Curso.findOne({id: req.params.idCurso, identificacionDocente: req.session.idUsuario}, (err, result) => {
+            if (err) {
+                return console.log(err)
+            }
+            if (result){
+                let lista = []
+                let vacio = true
+                if(result.contenido){
+                   lista = result.contenido
+                   if (lista.length>0){
+                        vacio = false
+                   }
+                }
+                return res.render('ver-curso', {
+                    adscrito: true,
+                    docente: true,
+                    curso: result,
+                    lista: lista,
+                    vacio: vacio
+                })
+            }
+        })
+    }
+    if(res.locals.aspirante) {
+        Curso.findOne({id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario}, (err, result)=>{
+            if (err){
+                return console.log(err)
+            }
+            if (result) {
+                let lista = result.contenido;
+                let vacio = false;
+                if(lista.length == 0){
+                    vacio = true
+                }
+                return res.render('ver-curso',{
+                    adscrito: true,
+                    docente: false,
+                    curso: result,
+                    vacio: vacio,
+                    lista: lista
+                })
+            }
+        })
+    }
+    Curso.findOne({id: req.params.idCurso}, (err, result)=>{
+        if (err){
+            return console.log(err)
+        }
+        if (result){
+            return res.render('ver-curso',{
+                curso: result,
+                adscrito: false
+            })
+        }
+        
+    })
+    
+    
+})
+
+app.get('/curso/' + ":idCurso" + "/new",  (req, res) => {
+    res.render('nueva-entrada', {
+        uploaded: false
+    })    
+})
+
+var upload = multer({ })
+app.post("/curso/" + ":idCurso" + "/new", upload.single('archivo') , (req, res) => {
+    console.log(req.files)
+    console.log(req.body.titulo)
+    /*let contenido = {
+        titulo: req.body.titulo,
+        descripcion: req.body.descripcion,
+        archivo: [req.file.buffer]
+    }
+    Curso.findOneAndUpdate({id: req.params.idCurso},{$push: {'contenido': contenido}}, (err,result) =>{
+        if (err){
+            return console.log(err)
+        }
+        if (result){
+            return res.render('nueva-entrada', {
+                uploaded: true
+            })
+        }
+    })*/
+})
 
 app.get('/salir', (req, res) => {
     req.session.destroy((err) => {

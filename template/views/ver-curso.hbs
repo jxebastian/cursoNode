@@ -1,0 +1,26 @@
+{{>header}}
+	<div class="container">
+		<div class="row justify-content-center m-3">
+			<h2>{{curso.nombre}}</h2>
+		</div>
+		{{#if adscrito}}
+			{{#if docente}}
+				<div class="row justify-content-center m-3">
+					<a href="/curso/{{curso.id}}/new" class="btn btn-success">Agregar Entrada</a>
+				</div>
+			{{/if}}
+			<div class="row m-3">
+				<h3>Contenido del curso:</h3>
+			</div>
+			{{#if vacio}}
+				<div class="row justify-content-center m-3 alert alert-warning">
+					Este curso no tiene contenido actualmente</div>
+			{{else}}
+				{{listarContenido lista}}
+			{{/if}}
+		{{else}}
+			<div class="row justify-content-center m-3 alert alert-warning">
+				Usted no está adscrito a este curso</div>
+		{{/if}}
+	</div>
+{{>footer}}
