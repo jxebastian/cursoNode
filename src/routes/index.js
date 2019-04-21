@@ -530,8 +530,8 @@ app.route('/estado/:idCurso')
                     from: 'johan2825@gmail.com',
                     subject: 'Inicio de curso ' + result.nombre,
                     text: 'usted a sido designado a cargo del siguiente curso \n' +
-                    'nombre: ' + result.nombre +  ' descripción: '+ result.descripcion + 
-                    ' intensidad: ' + result.intensidad,
+                        'nombre: ' + result.nombre + ' descripción: ' + result.descripcion +
+                        ' intensidad: ' + result.intensidad,
                 };
                 sgMail.send(msg);
             })
