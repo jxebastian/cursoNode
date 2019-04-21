@@ -50,7 +50,19 @@ const cursoSchema = new Schema({
 		telefono: {
 			type: Number
 		}
+	}],
+	contenido: [{
+		titulo: {
+			type: String
+		},
+		descripcion: {
+			type: String
+		},
+		archivos: [{
+			type: Buffer
+		}]
 	}]
+	
 });
 
 cursoSchema.plugin(uniqueValidator);

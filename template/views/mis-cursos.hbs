@@ -1,7 +1,7 @@
 {{>header}}
 <div class="container">
 	<div class="row justify-content-center">
-		<h2>Darme de baja</h2>
+		<h2>Mis cursos</h2>
 	</div>
 
 	{{#if datos}}
@@ -11,8 +11,8 @@
        			    <tr>
        			        <th scope="col">Id del curso</th>
        			        <th scope="col">Nombre</th>
-       			        <th scope="col">Modalidad</th>
-       			        <th scope="col">Intensidad</th>
+       			        <th scope="col"></th>
+       			        <th scope="col"></th>
        			        <th scope="col"></th>
        			    </tr>
        			</thead>
@@ -21,8 +21,8 @@
         	       	    <tr>
         			        <td>{{item.id}}</td>
         			        <td>{{item.nombre}}</td>
-        			        <td>{{item.modalidad}}</td>
-        			        <td>{{item.intensidad}} horas</td>
+        			        <td><a href="/curso/{{item.id}}/" class="btn btn-primary">Ver curso</a></td>
+        			        <td><a href="/curso/{{item.id}}/chat" class="btn btn-primary">Chat</a></td>
         			        <td><a href="/dar-baja/{{item.idUser}}-{{item.id}}" class="btn btn-danger">Darme de baja</a></td>
         			    </tr>
         		    {{/each}}                  
