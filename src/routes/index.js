@@ -14,8 +14,8 @@ const Usuario = require('./../models/usuario');
 const Curso = require('./../models/curso');
 //helpers
 require('./../helpers/helpers');
-
-
+const { Usuarios } = require('./../usuarios');
+const usuarios = new Usuarios();
 //hbs
 app.set('view engine', 'hbs')
 app.set('views', dirViews)
@@ -511,6 +511,32 @@ app.route('/estado/:idCurso')
         });
     })
 
+app.route('/chat/:idCurso')
+    .get((req, res) => {
+        if (!res.locals.sesion) {
+            return res.redirect('/');
+        };
+        if (res.locals.coordinador) {
+            res.render('index', {});
+        };
+        Curso.findOne({ id: req.params.idCurso }, (err, resultCur) => {
+            if (err) {
+                return console.log(err);
+            } else {
+                let estudiante = resultCur.estudiantes.find(estudiante => estudiante.identificacion === res.locals.idUsuario);
+                let docente = resultCur.identificacionDocente;
+                if (estudiante || (docente === res.locals.idUsuario)) {
+                    return res.render('chat', {
+                      curso: resultCur.nombre,
+                      usuario: estudiante.nombre
+                    });
+                }
+                console.log("Check")
+                return res.redirect('/');
+            }
+        });
+    });
+
 app.get('/salir', (req, res) => {
     req.session.destroy((err) => {
         if (err) return console.log(err)
@@ -523,4 +549,5 @@ app.get('*', (req, res) => {
         titulo: "Error 404",
     })
 });
+
 module.exports = app
