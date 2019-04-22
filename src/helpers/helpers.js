@@ -230,18 +230,20 @@ hbs.registerHelper('listarCursos', (cursos) => {
   }
 });
 
-hbs.registerHelper('listarContenido', (contenido)=>{
-  if (contenido.length > 0){
+/*hbs.registerHelper('listarContenido', (curso)=>{
+  //console.log("Si entra:\n"+contenido)
+  //let listaContenido = [contenido]
+  if (curso.contenido.length > 0){
     texto = "<div class='accordion' id='accordion'>";
     i = 1;
-    cursos.forEach(contenido => {
-      let cabecera = contenido.titulo
+    curso.contenido.forEach(item => {
+      let cabecera = item.titulo;
       let archivos = "<ul class='m-2'>";
-      contenido.archivos.forEach(archivo => {
+      item.archivos.forEach(archivo => {
         archivos = archivos + "<li class='m-2'><div>" + archivo.toString('base64') + "</div></li>"
-      })
+      });
       archivos = archivos + "</ul>"
-      let content = "<b> Descripción: </b> " + contenido.descripcion + ".<br>" + archivos + "<br><br>";
+      let content = "<b> Descripción: </b> " + item.descripcion + ".<br>" + archivos + "<br><br>";
       texto = texto +
         `<div class="card">
                 <div class="card-header" id="heading${i}">
@@ -264,7 +266,7 @@ hbs.registerHelper('listarContenido', (contenido)=>{
   } else {
     return "<h2>No hay contenido aún</h2>"
   }
-})
+})*/
 
 hbs.registerHelper('listarDocentes', (docentes) => {
    if (docentes.length > 0) {

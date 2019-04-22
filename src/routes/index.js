@@ -546,51 +546,67 @@ app.route('/estado/:idCurso')
 
 app.get('/curso/:idCurso/', (req, res) => {
     if (res.locals.docente) {
+        console.log('Soy docente')
         Curso.findOne({ id: req.params.idCurso, identificacionDocente: req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
             }
             if (result) {
-                let lista = []
                 let vacio = true
-                if (result.contenido) {
-                    lista = result.contenido
-                    if (lista.length > 0) {
-                        vacio = false
-                    }
+                let listaContenido = []
+                if (result.contenido.length > 0) {
+                    vacio = false
+                    result.contenido.forEach(item=>{
+                        let cont = {
+                            titulo: item.titulo,
+                            descripcion: item.descripcion,
+                            archivo: item.archivo.toString('base64')
+                        }
+                        listaContenido.push(cont);
+                    })
                 }
                 return res.render('ver-curso', {
                     adscrito: true,
                     docente: true,
                     curso: result,
-                    lista: lista,
+                    lista: listaContenido,
                     vacio: vacio
                 })
             }
         })
     }
     if (res.locals.aspirante) {
+        console.log('Soy aspirante')
         Curso.findOne({ id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
             }
             if (result) {
-                let lista = result.contenido;
-                let vacio = false;
-                if (lista.length == 0) {
-                    vacio = true
+                let vacio = true
+                let listaContenido = []
+                if (result.contenido.length > 0) {
+                    vacio = false
+                    result.contenido.forEach(item=>{
+                        let cont = {
+                            titulo: item.titulo,
+                            descripcion: item.descripcion,
+                            archivo: item.archivo.toString('base64')
+                        }
+                        listaContenido.push(cont);
+                    })
                 }
                 return res.render('ver-curso', {
                     adscrito: true,
                     docente: false,
                     curso: result,
-                    vacio: vacio,
-                    lista: lista
+                    lista: listaContenido,
+                    vacio: vacio
                 })
             }
         })
     }
     Curso.findOne({ id: req.params.idCurso }, (err, result) => {
+        console.log('No soy nada')
         if (err) {
             return console.log(err)
         }
@@ -612,13 +628,12 @@ app.route('/curso/:idCurso/new')
     })
     .post(upload.single('archivo'),(req, res) => {
         console.log(req.file)
-        console.log(req.body);
-        res.send('ok');
-        /*let contenido = {
+        let contenido = {
             titulo: req.body.titulo,
             descripcion: req.body.descripcion,
-            archivo: [req.file.buffer]
+            archivo: req.file.buffer
         }
+        console.log(contenido)
         Curso.findOneAndUpdate({id: req.params.idCurso},{$push: {'contenido': contenido}}, (err,result) =>{
             if (err){
                 return console.log(err)
@@ -628,7 +643,7 @@ app.route('/curso/:idCurso/new')
                     uploaded: true
                 })
             }
-        })*/
+        })
     })
 
 app.get('/salir', (req, res) => {

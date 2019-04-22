@@ -16,7 +16,19 @@
 				<div class="row justify-content-center m-3 alert alert-warning">
 					Este curso no tiene contenido actualmente</div>
 			{{else}}
-				{{listarContenido lista}}
+				{{#each lista as |contenido|}}
+					<div class="card m-2">
+						<div class="card-header">
+							{{contenido.titulo}}
+						</div>
+						<div class="card-body">
+							<h6 class="card-title">Descripción:</h6>
+							<p class="card-text">{{contenido.descripcion}}</p>
+							<img src="data:img/jpg;base64,{{contenido.archivo}}" class="img-fluid">
+						</div>
+					</div>
+					
+				{{/each}}
 			{{/if}}
 		{{else}}
 			<div class="row justify-content-center m-3 alert alert-warning">

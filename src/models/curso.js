@@ -58,9 +58,9 @@ const cursoSchema = new Schema({
 		descripcion: {
 			type: String
 		},
-		archivos: [{
+		archivo: {
 			type: Buffer
-		}]
+		}
 	}]
 	
 });
