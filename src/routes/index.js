@@ -479,6 +479,7 @@ app.route('/registroCurso')
             }
         })
     })
+
 app.route('/estado/:idCurso')
     .get((req, res) => {
         if (!res.locals.coordinador) {
@@ -645,7 +646,7 @@ app.route('/curso/:idCurso/new')
         })
     })
 
-app.route('/chat/:idCurso')
+app.route('/curso/:idCurso/chat')
     .get((req, res) => {
         if (!res.locals.sesion) {
             return res.redirect('/');
