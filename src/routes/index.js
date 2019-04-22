@@ -556,7 +556,7 @@ app.get('/curso/:idCurso/', (req, res) => {
                 let listaContenido = []
                 if (result.contenido.length > 0) {
                     vacio = false
-                    result.contenido.forEach(item=>{
+                    result.contenido.forEach(item => {
                         let cont = {
                             titulo: item.titulo,
                             descripcion: item.descripcion,
@@ -586,7 +586,7 @@ app.get('/curso/:idCurso/', (req, res) => {
                 let listaContenido = []
                 if (result.contenido.length > 0) {
                     vacio = false
-                    result.contenido.forEach(item=>{
+                    result.contenido.forEach(item => {
                         let cont = {
                             titulo: item.titulo,
                             descripcion: item.descripcion,
@@ -604,29 +604,28 @@ app.get('/curso/:idCurso/', (req, res) => {
                 })
             }
         })
+    } else {
+        Curso.findOne({ id: req.params.idCurso }, (err, result) => {
+            console.log('No soy nada')
+            if (err) {
+                return console.log(err)
+            }
+            if (result) {
+                return res.render('ver-curso', {
+                    curso: result,
+                    adscrito: false
+                })
+            }
+
+        })
     }
-    Curso.findOne({ id: req.params.idCurso }, (err, result) => {
-        console.log('No soy nada')
-        if (err) {
-            return console.log(err)
-        }
-        if (result) {
-            return res.render('ver-curso', {
-                curso: result,
-                adscrito: false
-            })
-        }
-
-    })
-
-
 })
 
 app.route('/curso/:idCurso/new')
     .get((req, res) => {
         res.render('nueva-entrada');
     })
-    .post(upload.single('archivo'),(req, res) => {
+    .post(upload.single('archivo'), (req, res) => {
         console.log(req.file)
         let contenido = {
             titulo: req.body.titulo,
@@ -634,11 +633,11 @@ app.route('/curso/:idCurso/new')
             archivo: req.file.buffer
         }
         console.log(contenido)
-        Curso.findOneAndUpdate({id: req.params.idCurso},{$push: {'contenido': contenido}}, (err,result) =>{
-            if (err){
+        Curso.findOneAndUpdate({ id: req.params.idCurso }, { $push: { 'contenido': contenido } }, (err, result) => {
+            if (err) {
                 return console.log(err)
             }
-            if (result){
+            if (result) {
                 return res.render('nueva-entrada', {
                     uploaded: true
                 })
