@@ -15,3 +15,128 @@ body {
 .roles{
     text-align: center;
 }
+
+.chat {
+  border-style: groove;
+  border-color: #c4c4c4;
+  border-radius: 5px;
+  height: 485px;
+  margin : 0 auto;
+  overflow-y: auto;
+  width: 50%;
+}
+.type_msg {
+  /* border-top: 1px solid #c4c4c4; */
+  padding-top: 5px;
+}
+
+.conexion {
+  /* align-content: center; */
+  background-color: #c4c4c4;
+  border-radius: 5px;
+  box-sizing: border-box;
+  display: inline-block;
+  flex: none;
+  font-size: 12.5px;
+  line-height: 21px;
+  /* height: auto; */
+  max-width: 100% !important;
+  /* position: relative; */
+  padding: 5px 12px 6px 12px;
+  position: relative;
+  text-align: center;
+  vertical-align: baseline;
+  /* width: auto; */
+}
+.mensaje {
+  display: block;
+  font: inherit;
+  font-size: 100%;
+  margin-bottom: 2px;
+  padding-left: 3%;
+  padding-right: 3%;
+  position: relative;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.mensaje:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.mensaje-enviado {
+  background-color: #FAAC58;
+  border-radius: 7.5px;
+  border-top-right-radius: 0px;
+  color: #262626;
+  display: block;
+  float: right;
+  font-size: 14.2px;
+  line-height: 19px;
+  max-width: 70%;
+  position: relative;
+}
+
+.mensaje-recibido {
+  background-color: #2E9AFE;
+  border-radius: 7.5px;
+  border-top-left-radius: 0px;
+  color: #262626;
+  display: block;
+  float: left;
+  font-size: 14.2px;
+  line-height: 19px;
+  max-width: 70%;
+  position: relative;
+}
+
+.mensaje-estilo {
+  box-sizing: border-box;
+  display: block;
+  font-size: 100%;
+  padding: 6px 7px 8px 9px;
+  vertical-align: baseline;
+}
+
+.mensaje-recibido-nombre {
+  color: #ffffff;
+  display: flex;
+  font-size: 12.8px;
+  font-weight: 500;
+  line-height: 22px;
+  vertical-align: baseline;
+}
+
+.mensaje-contenido {
+  color: #262626;
+  display: block;
+  position: relative;
+  white-space: pre-line;
+  word-wrap: break-word;
+}
+
+.nombre-usuario {
+  color: #ffffff;
+  flex: 0 1 auto;
+  margin-left: -2px;
+  overflow: hidden;
+  padding-left: 2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mensaje-conexion {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+  max-width: 100%;
+  padding-left: 10%;
+  padding-right: 10%;
+  position: relative;
+}
+
+.mensaje-conexion:first-child {
+  margin-top: 12px;
+}

@@ -6,6 +6,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session')
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 var MemoryStore = require('memorystore')(session);
 
 //paths
@@ -14,6 +16,39 @@ const dirNode_modules = path.join(__dirname, '../node_modules');
 
 //static
 app.use(express.static(dirPublico));
+
+const { Usuarios } = require('./usuarios');
+const usuarios = new Usuarios();
+
+io.on('connection', client => {
+
+  console.log("un usuario se ha conectado");
+
+  client.on('usuarioNuevo', (usuario) =>{
+    let listado = usuarios.agregarUsuario(client.id, usuario);
+    console.log(listado);
+    let texto = `${usuario} se ha conectado`;
+    io.emit('nuevoUsuario', texto );
+  });
+
+  client.on('disconnect',()=>{
+    let usuarioBorrado = usuarios.borrarUsuario(client.id);
+    let texto = `${usuarioBorrado.nombre} se ha desconectado`;
+    io.emit('usuarioDesconectado', texto);
+  });
+
+  client.on("texto", (text, callback) =>{
+    let usuario = usuarios.getUsuario(client.id);
+    let datos = {
+      texto: text,
+      usuario: usuario.nombre
+    }
+    io.emit("texto", (datos));
+    callback();
+  });
+
+});
+
 app.use('/css', express.static(dirNode_modules + '/bootstrap/dist/css'));
 app.use('/js', express.static(dirNode_modules + '/jquery/dist'));
 app.use('/js', express.static(dirNode_modules + '/popper.js/dist'));
@@ -53,7 +88,7 @@ app.use((req, res, next) => {
       default:
         break;
     }
-    res.locals.coordinador = coordinador; 
+    res.locals.coordinador = coordinador;
     res.locals.aspirante = aspirante;
     res.locals.docente = docente;
   }
@@ -73,6 +108,6 @@ mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, resultado) 
   console.log("conectado")
 });
 
-app.listen(process.env.PORT, () => {
-  console.log('servidor en el puerto ' + process.env.PORT)
+server.listen(process.env.PORT, (err) => {
+	console.log ('servidor en el puerto ' + process.env.PORT)
 });

@@ -1,0 +1,27 @@
+{{>header}}
+
+  <div class="container">
+    <h1>{{curso}}</h1>
+    <input type="hidden" name="usuario" value={{usuario}} id="usuario">
+    <div id="chat" class="chat"></div>
+    <div class="fixed-bottom container type_msg">
+      <form id="formulario">
+        <div class="input-group mb-3" style="margin : 0 auto; width: 50%;">
+          <input type="text" id="mensaje" class="form-control" placeholder="Escribe tu mensaje aquí" aria-label="Recipient's username" aria-describedby="button-addon2" required>
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit" id="button-addon2">Enviar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/sockets/socket.js"></script>
+  </div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>
