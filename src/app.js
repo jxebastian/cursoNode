@@ -26,7 +26,6 @@ io.on('connection', client => {
 
   client.on('usuarioNuevo', (usuario) =>{
     let listado = usuarios.agregarUsuario(client.id, usuario);
-    console.log(listado);
     let texto = `${usuario} se ha conectado`;
     io.emit('nuevoUsuario', texto );
   });

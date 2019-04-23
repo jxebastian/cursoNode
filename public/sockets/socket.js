@@ -1,19 +1,19 @@
 socket = io();
 
 const usuario = document.querySelector('#usuario').value;
+// var curso = document.querySelector('#curso').value;
+// curso = "#" + curso;
 
 socket.on("connect", () =>{
 	socket.emit('usuarioNuevo', usuario);
 });
 
 socket.on('nuevoUsuario', (texto) =>{
-	console.log(texto);
 	chat.innerHTML  = chat.innerHTML + inflarChatConexion(texto);
 	chat.scrollTop = chat.scrollHeight;
 });
 
 socket.on('usuarioDesconectado', (texto) =>{
-	console.log(texto);
 	chat.innerHTML  = chat.innerHTML + inflarChatConexion(texto);
 	chat.scrollTop = chat.scrollHeight;
 });
@@ -29,9 +29,8 @@ formulario.addEventListener('submit', (datos) => {
 			mensaje.focus();
 	});
 });
- 
+
 socket.on("texto", (datos) =>{
-	// console.log(text);
 	chat.innerHTML  = chat.innerHTML + inflarChat(datos);
 	chat.scrollTop = chat.scrollHeight;
 });

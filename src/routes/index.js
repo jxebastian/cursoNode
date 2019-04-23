@@ -652,7 +652,7 @@ app.route('/curso/:idCurso/chat')
             return res.redirect('/');
         };
         if (res.locals.coordinador) {
-            res.render('index', {});
+            return res.redirect('/');
         };
         Curso.findOne({ id: req.params.idCurso }, (err, resultCur) => {
             if (err) {
@@ -660,15 +660,27 @@ app.route('/curso/:idCurso/chat')
             } else {
                 let estudiante = resultCur.estudiantes.find(estudiante => estudiante.identificacion === res.locals.idUsuario);
                 let docente = resultCur.identificacionDocente;
-                if (estudiante || (docente === res.locals.idUsuario)) {
+                if (estudiante) {
                     return res.render('chat', {
                       curso: resultCur.nombre,
                       usuario: estudiante.nombre
                     });
+                } else if (docente === res.locals.idUsuario) {
+                  Usuario.findOne({identificacion: res.locals.idUsuario}, (err, docente) => {
+                    if (err) {
+                      return console.log(err);
+                    }
+                    console.log("Check");
+                    return res.render('chat', {
+                      curso: resultCur.nombre,
+                      usuario: docente.nombre
+                    });
+                    console.log("Check2");
+                  });
+                } else {
+                  return res.redirect('/');
                 }
-                console.log("Check")
-                return res.redirect('/');
-            }
+            };
         });
     });
 
