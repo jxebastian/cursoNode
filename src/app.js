@@ -25,15 +25,19 @@ io.on('connection', client => {
   console.log("un usuario se ha conectado");
 
   client.on('usuarioNuevo', (usuario) =>{
-    let listado = usuarios.agregarUsuario(client.id, usuario);
-    let texto = `${usuario} se ha conectado`;
-    io.emit('nuevoUsuario', texto );
+    let listado = usuarios.agregarUsuario(client.id, usuario.nombre, usuario.curso);
+    let texto = `${usuario.nombre} se ha conectado`;
+    let contactos = usuarios.getUsuarios(usuario.curso).filter(user => user.id !== client.id);
+    contactos.forEach(contacto => client.broadcast.to(contacto.id).emit('nuevoUsuario', texto))
+    // client.broadcast.emit('nuevoUsuario', texto );
   });
 
   client.on('disconnect',()=>{
     let usuarioBorrado = usuarios.borrarUsuario(client.id);
     let texto = `${usuarioBorrado.nombre} se ha desconectado`;
-    io.emit('usuarioDesconectado', texto);
+    let contactos = usuarios.getUsuarios(usuarioBorrado.curso);
+    contactos.forEach(contacto => client.broadcast.to(contacto.id).emit('usuarioDesconectado', texto));
+    // client.broadcast.emit('usuarioDesconectado', texto);
   });
 
   client.on("texto", (text, callback) =>{
@@ -42,7 +46,9 @@ io.on('connection', client => {
       texto: text,
       usuario: usuario.nombre
     }
-    io.emit("texto", (datos));
+    let contactos = usuarios.getUsuarios(usuario.curso);
+    contactos.forEach(contacto => client.to(contacto.id).emit("texto", (datos)));
+    client.emit("texto", (datos));
     callback();
   });
 
@@ -102,7 +108,7 @@ app.use(require('./routes/index'));
 
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, resultado) => {
   if (err) {
-    return console.log(error)
+    return console.log(err)
   }
   console.log("conectado")
 });

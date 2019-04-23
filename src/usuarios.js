@@ -4,14 +4,14 @@ class Usuarios{
 		this.usuarios = [];
 	}
 
-	agregarUsuario(id, nombre){
-		let usuario = {id, nombre}
+	agregarUsuario(id, nombre, curso){
+		let usuario = {id, nombre, curso}
 		this.usuarios.push(usuario)
 		return this.usuarios;
 	}
 
-	getUsuarios (){
-		return this.usuarios
+	getUsuarios (curso){
+		return this.usuarios.filter(user => user.curso === curso);
 	}
 
 	getUsuario(id){

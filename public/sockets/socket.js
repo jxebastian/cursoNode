@@ -1,11 +1,11 @@
 socket = io();
 
 const usuario = document.querySelector('#usuario').value;
-// var curso = document.querySelector('#curso').value;
+const curso = document.querySelector('#curso').value;
 // curso = "#" + curso;
 
 socket.on("connect", () =>{
-	socket.emit('usuarioNuevo', usuario);
+	socket.emit('usuarioNuevo', {nombre: usuario, curso: curso});
 });
 
 socket.on('nuevoUsuario', (texto) =>{
@@ -45,6 +45,9 @@ const inflarChatConexion = (texto) => {
 }
 
 const inflarChat = (datos) => {
+	console.log(datos.usuario);
+	console.log(usuario);
+	console.log(datos.usuario === usuario);
 	if (datos.usuario === usuario) {
 		let mensaje = `<div class="mensaje">
 											<span></span>
