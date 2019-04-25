@@ -24,7 +24,10 @@
 						<div class="card-body">
 							<h6 class="card-title">Descripción:</h6>
 							<p class="card-text">{{contenido.descripcion}}</p>
-							<img src="data:img/jpg;base64,{{contenido.archivo}}" class="img-fluid">
+							<img src="data:img/jpg;base64,{{contenido.archivo}}" class="img-fluid"><br><br>
+							{{#if contenido.id}}
+								<a href="/curso/{{contenido.curso}}/delete/{{contenido.id}}" class="btn btn-danger">Eliminar entrada</a>
+							{{/if}}
 						</div>
 					</div>
 					

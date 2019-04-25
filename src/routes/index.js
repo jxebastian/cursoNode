@@ -8,6 +8,7 @@ const sgMail = require('@sendgrid/mail');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const multer = require('multer')
+const ObjectId = require('mongodb').ObjectID;
 //paths
 const dirViews = path.join(__dirname, '../../template/views');
 const dirPartials = path.join(__dirname, '../../template/partials');
@@ -547,7 +548,6 @@ app.route('/estado/:idCurso')
 
 app.get('/curso/:idCurso/', (req, res) => {
     if (res.locals.docente) {
-        console.log('Soy docente')
         Curso.findOne({ id: req.params.idCurso, identificacionDocente: req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
@@ -559,6 +559,8 @@ app.get('/curso/:idCurso/', (req, res) => {
                     vacio = false
                     result.contenido.forEach(item => {
                         let cont = {
+                            id: item._id,
+                            curso: result.id,
                             titulo: item.titulo,
                             descripcion: item.descripcion,
                             archivo: item.archivo.toString('base64')
@@ -577,7 +579,6 @@ app.get('/curso/:idCurso/', (req, res) => {
         })
     }
     if (res.locals.aspirante) {
-        console.log('Soy aspirante')
         Curso.findOne({ id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
@@ -607,7 +608,6 @@ app.get('/curso/:idCurso/', (req, res) => {
         })
     } else {
         Curso.findOne({ id: req.params.idCurso }, (err, result) => {
-            console.log('No soy nada')
             if (err) {
                 return console.log(err)
             }
@@ -624,7 +624,9 @@ app.get('/curso/:idCurso/', (req, res) => {
 
 app.route('/curso/:idCurso/new')
     .get((req, res) => {
-        res.render('nueva-entrada');
+        res.render('nueva-entrada', {
+            idCurso: req.params.idCurso
+        });
     })
     .post(upload.single('archivo'), (req, res) => {
         console.log(req.file)
@@ -640,10 +642,54 @@ app.route('/curso/:idCurso/new')
             }
             if (result) {
                 return res.render('nueva-entrada', {
-                    uploaded: true
+                    uploaded: true,
+                    idCurso: req.params.idCurso
                 })
             }
         })
+    })
+
+app.route('/curso/:idCurso/delete/:idContenido')
+    .get((req, res) => {
+        Curso.findOne({ id: req.params.idCurso}, (err, result) => {
+            if (err){
+                return console.log(err)
+            }
+            if (result) {
+                let encontrado;
+                result.contenido.forEach(item => {
+                    if (JSON.stringify(req.params.idContenido) === JSON.stringify(item._id)){
+                        encontrado = {
+                            titulo: item.titulo,
+                            descripcion: item.descripcion,
+                            archivo: item.archivo.toString('base64')
+                        }
+                    }
+
+                })
+                return res.render('borrar-entrada',{
+                        eliminado: false,
+                        contenido: encontrado,
+                        idCurso: req.params.idCurso
+                    })
+            }
+        })        
+    })
+    .post((req, res) => {
+        Curso.findOneAndUpdate( { id: req.params.idCurso }, 
+            {$pull: { "contenido": { _id: new ObjectId(req.params.idContenido) } } }, (err, result) => {
+                if (err) {
+                    return console.log(err)
+                }
+                if (result) {
+                    return res.render('borrar-entrada', {
+                        eliminado: true,
+                        mensaje: "Entrada eliminada satisfactoriamente",
+                        idCurso: req.params.idCurso
+                    })
+                }
+
+            })
     })
 
 app.route('/curso/:idCurso/chat')
