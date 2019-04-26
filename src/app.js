@@ -22,7 +22,7 @@ const usuarios = new Usuarios();
 
 io.on('connection', client => {
 
-  console.log("un usuario se ha conectado");
+  //console.log("un usuario se ha conectado");
 
   client.on('usuarioNuevo', (usuario) =>{
     let listado = usuarios.agregarUsuario(client.id, usuario.nombre, usuario.curso);
@@ -40,8 +40,6 @@ io.on('connection', client => {
       client.broadcast.emit('notificacion',(texto));
       contactos.forEach(contacto => client.broadcast.to(contacto.id).emit('usuarioDesconectado', texto));
       // client.broadcast.emit('usuarioDesconectado', texto);
-    } else {
-        console.log("Alguien cambio de pagina");
     }
   });
 
