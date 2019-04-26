@@ -34,10 +34,15 @@ io.on('connection', client => {
 
   client.on('disconnect',()=>{
     let usuarioBorrado = usuarios.borrarUsuario(client.id);
-    let texto = `${usuarioBorrado.nombre} se ha desconectado`;
-    let contactos = usuarios.getUsuarios(usuarioBorrado.curso);
-    contactos.forEach(contacto => client.broadcast.to(contacto.id).emit('usuarioDesconectado', texto));
-    // client.broadcast.emit('usuarioDesconectado', texto);
+    if (usuarioBorrado != undefined){
+      let texto = `${usuarioBorrado.nombre} se ha desconectado`;
+      let contactos = usuarios.getUsuarios(usuarioBorrado.curso);
+      client.broadcast.emit('notificacion',(texto));
+      contactos.forEach(contacto => client.broadcast.to(contacto.id).emit('usuarioDesconectado', texto));
+      // client.broadcast.emit('usuarioDesconectado', texto);
+    } else {
+        console.log("Alguien cambio de pagina");
+    }
   });
 
   client.on("texto", (text, callback) =>{
@@ -50,6 +55,12 @@ io.on('connection', client => {
     contactos.forEach(contacto => client.to(contacto.id).emit("texto", (datos)));
     client.emit("texto", (datos));
     callback();
+  });
+
+  client.on("notificar", () =>{
+    let usuario = usuarios.getUsuario(client.id);
+    let texto = "Se ha conectado " + usuario.nombre ;
+    client.broadcast.emit('notificacion',(texto));
   });
 
 });
