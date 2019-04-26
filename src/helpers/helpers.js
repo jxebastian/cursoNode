@@ -166,7 +166,8 @@ hbs.registerHelper('listarCursosDocente', (cursos) => {
         "<b> Intensidad horaria: </b> " + curso.intensidad + " horas." + "<br>" +
         "<b> Valor: </b> " + curso.valor + " pesos. <br>" +
         "<b> Estado: </b> " + curso.estado + ". <br>" +
-        `<a href= "/curso/${curso.id}" class="btn btn-primary" >Ver curso</a> <br><br>` +
+        `<a href= "/curso/${curso.id}" class="btn btn-primary mr-3" >Ver curso</a>` +
+        `<a href="/curso/${curso.id}/chat" class="btn btn-primary">Chat</a> <br><br>` +
         listaEstudiantes;
       texto = texto +
         `<div class="card">
@@ -229,44 +230,6 @@ hbs.registerHelper('listarCursos', (cursos) => {
     return "<h1>No hay cursos por mostrar</h1>";
   }
 });
-
-/*hbs.registerHelper('listarContenido', (curso)=>{
-  //console.log("Si entra:\n"+contenido)
-  //let listaContenido = [contenido]
-  if (curso.contenido.length > 0){
-    texto = "<div class='accordion' id='accordion'>";
-    i = 1;
-    curso.contenido.forEach(item => {
-      let cabecera = item.titulo;
-      let archivos = "<ul class='m-2'>";
-      item.archivos.forEach(archivo => {
-        archivos = archivos + "<li class='m-2'><div>" + archivo.toString('base64') + "</div></li>"
-      });
-      archivos = archivos + "</ul>"
-      let content = "<b> Descripción: </b> " + item.descripcion + ".<br>" + archivos + "<br><br>";
-      texto = texto +
-        `<div class="card">
-                <div class="card-header" id="heading${i}">
-                  <h5 class="mb-0">
-                    <button class="btn btn-outline-info btn-lg btn-block" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
-                      ${cabecera}
-                    </button>
-                  </h5>
-                </div>
-
-                <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#accordion">
-                  <div class="card-body">
-                    ${content}
-                  </div>
-                </div>
-              </div>`;
-      i = i + 1;
-    });
-    return texto;
-  } else {
-    return "<h2>No hay contenido aún</h2>"
-  }
-})*/
 
 hbs.registerHelper('listarDocentes', (docentes) => {
    if (docentes.length > 0) {
