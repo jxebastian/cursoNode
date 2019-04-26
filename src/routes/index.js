@@ -525,7 +525,9 @@ app.route('/estado/:idCurso')
                 subject: 'Inicio de curso ' + result.nombre,
                 text: 'Ya damos por empezado el curso al que te inscribiste en educación continua',
             };
-            sgMail.send(msg);
+            if (to.length != 0){
+                sgMail.send(msg);
+            }
             Usuario.findOne({ identificacion: req.body.docente }, (err, docente) => {
                 if (err) {
                     return console.log(err);
