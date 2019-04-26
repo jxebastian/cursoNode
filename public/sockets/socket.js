@@ -11,7 +11,6 @@ socket.on("connect", () =>{
 
 socket.on('nuevoUsuario', (texto) =>{
 	chat.innerHTML  = chat.innerHTML + inflarChatConexion(texto);
-	alert("Hello! I am an alert box!");
 	socket.emit('notificar');
     chat.scrollTop = chat.scrollHeight;
 });
