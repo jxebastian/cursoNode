@@ -4,33 +4,35 @@
 		<h3>Nueva entrada</h3>
 	</div>
 	<div class="row justify-content-center m-3">
-		<form action="" method="post" enctype="multipart/form-data">
-			<label>Título:</label>
-			<input type="text" class="form-control" name="titulo" placeholder="Titulo" required><br>
-			<label>Descripción(Opcional)</label>
-			<textarea class="form-control" name="descripcion" rows="5" placeholder="Descripcion"></textarea><br>
-			<label>Archivo</label>
-			<input type="file" name="archivo" required>
-		{{#if uploaded}}
-			<div class=" row justify-content-center m-3 alert alert-success">
-				Se han guardado los cambios
-			</div>
-			<div class="row justify-content-center m-3">
-				<div class="col d-flex justify-content-center">
-					<a href="/curso/{{idCurso}}" class="btn btn-primary">Regresar</a>
+		<div class="col-sm-6 m-3 p-3 shadow-lg bg-white rounded"> 
+			<form action="" method="post" enctype="multipart/form-data">
+				<label>Título:</label>
+				<input type="text" class="form-control" name="titulo" placeholder="Titulo" required><br>
+				<label>Descripción(Opcional):</label>
+				<textarea class="form-control" name="descripcion" rows="5" placeholder="Descripcion"></textarea><br>
+				<label>Archivo:</label><br>
+				<input type="file" name="archivo" required>
+			{{#if uploaded}}
+				<div class=" row justify-content-center m-3 alert alert-success">
+					Se han guardado los cambios
 				</div>
-			</div>
-		{{else}}
-			<div class="row justify-content-center m-3">
-				<div class="col d-flex justify-content-end">
-					<a href="/curso/{{idCurso}}" class="btn btn-primary">Regresar</a>
+				<div class="row justify-content-center m-3">
+					<div class="col d-flex justify-content-center">
+						<a href="/curso/{{idCurso}}" class="btn btn-primary">Regresar</a>
+					</div>
 				</div>
-				<div class="col d-flex justify-content-start">
-					<button type="submit" class="btn btn-primary">Aceptar</button>
+			{{else}}
+				<div class="row justify-content-center m-3">
+					<div class="col d-flex justify-content-end">
+						<a href="/curso/{{idCurso}}" class="btn btn-primary">Regresar</a>
+					</div>
+					<div class="col d-flex justify-content-start">
+						<button type="submit" class="btn btn-primary">Aceptar</button>
+					</div>
 				</div>
-			</div>
-		{{/if}}
-		</form>
+			{{/if}}
+			</form>	
+		</div>
 	</div>
 
 </div>

@@ -563,7 +563,9 @@ app.get('/curso/:idCurso/', (req, res) => {
                             curso: result.id,
                             titulo: item.titulo,
                             descripcion: item.descripcion,
-                            archivo: item.archivo.toString('base64')
+                            archivo: item.archivo.toString('base64'),
+                            nombre: item.nombre,
+                            tipo: item.tipo
                         }
                         listaContenido.push(cont);
                     })
@@ -577,8 +579,7 @@ app.get('/curso/:idCurso/', (req, res) => {
                 })
             }
         })
-    }
-    if (res.locals.aspirante) {
+    } else if (res.locals.aspirante) {
         Curso.findOne({ id: req.params.idCurso, "estudiantes.identificacion": req.session.idUsuario }, (err, result) => {
             if (err) {
                 return console.log(err)
@@ -592,7 +593,9 @@ app.get('/curso/:idCurso/', (req, res) => {
                         let cont = {
                             titulo: item.titulo,
                             descripcion: item.descripcion,
-                            archivo: item.archivo.toString('base64')
+                            archivo: item.archivo.toString('base64'),
+                            nombre: item.nombre,
+                            tipo: item.tipo
                         }
                         listaContenido.push(cont);
                     })
@@ -629,13 +632,13 @@ app.route('/curso/:idCurso/new')
         });
     })
     .post(upload.single('archivo'), (req, res) => {
-        console.log(req.file)
         let contenido = {
             titulo: req.body.titulo,
             descripcion: req.body.descripcion,
-            archivo: req.file.buffer
+            archivo: req.file.buffer,
+            nombre: req.file.originalname,
+            tipo: req.file.mimetype
         }
-        console.log(contenido)
         Curso.findOneAndUpdate({ id: req.params.idCurso }, { $push: { 'contenido': contenido } }, (err, result) => {
             if (err) {
                 return console.log(err)
@@ -662,7 +665,9 @@ app.route('/curso/:idCurso/delete/:idContenido')
                         encontrado = {
                             titulo: item.titulo,
                             descripcion: item.descripcion,
-                            archivo: item.archivo.toString('base64')
+                            archivo: item.archivo.toString('base64'),
+                            nombre: item.nombre,
+                            tipo: item.tipo
                         }
                     }
 
@@ -716,12 +721,10 @@ app.route('/curso/:idCurso/chat')
                     if (err) {
                       return console.log(err);
                     }
-                    console.log("Check");
                     return res.render('chat', {
                       curso: resultCur.nombre,
                       usuario: docente.nombre
                     });
-                    console.log("Check2");
                   });
                 } else {
                   return res.redirect('/');

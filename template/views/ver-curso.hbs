@@ -18,13 +18,14 @@
 			{{else}}
 				{{#each lista as |contenido|}}
 					<div class="card m-2">
-						<div class="card-header">
-							{{contenido.titulo}}
-						</div>
+						<div class="card-header"><h3>{{contenido.titulo}}</h3></div>
 						<div class="card-body">
-							<h6 class="card-title">Descripción:</h6>
-							<p class="card-text">{{contenido.descripcion}}</p>
-							<img src="data:img/jpg;base64,{{contenido.archivo}}" class="img-fluid"><br><br>
+							<p class="card-text"><strong>Descripción:</strong></p>
+							<p class="card-text">{{contenido.descripcion}}</p><br>
+							<p class="card-text"><strong>Archivos:</strong></p>
+							<ul style="list-style-type:circle;">
+								<li><a href="data:{{contenido.tipo}};base64,{{contenido.archivo}}" download="{{contenido.nombre}}">{{contenido.nombre}}</a></li>
+							</ul><br>
 							{{#if contenido.id}}
 								<a href="/curso/{{contenido.curso}}/delete/{{contenido.id}}" class="btn btn-danger">Eliminar entrada</a>
 							{{/if}}

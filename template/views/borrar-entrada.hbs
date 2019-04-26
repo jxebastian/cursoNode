@@ -17,13 +17,14 @@
 				<p>Atención: Está a punto de eliminar la entrada {{contenido.titulo}}, está seguro que quiere eliminarla? (Una vez eliminada no es posible recuperar la información)</p>
 			</div>
 			<div class="card m-2">
-				<div class="card-header">
-					{{contenido.titulo}}
-				</div>
+				<div class="card-header"><h3>{{contenido.titulo}}</h3></div>
 				<div class="card-body">
-					<h6 class="card-title">Descripción:</h6>
-					<p class="card-text">{{contenido.descripcion}}</p>
-					<img src="data:img/jpg;base64,{{contenido.archivo}}" class="img-fluid">
+					<p class="card-text"><strong>Descripción:</strong></p>
+					<p class="card-text">{{contenido.descripcion}}</p><br>
+					<p class="card-text"><strong>Archivos:</strong></p>
+					<ul style="list-style-type:circle;">
+						<li><a href="data:{{contenido.tipo}};base64,{{contenido.archivo}}" download="{{contenido.nombre}}">{{contenido.nombre}}</a></li>
+					</ul><br>
 				</div>
 			</div>
 

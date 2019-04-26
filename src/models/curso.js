@@ -60,6 +60,12 @@ const cursoSchema = new Schema({
 		},
 		archivo: {
 			type: Buffer
+		},
+		nombre: {
+			type: String
+		},
+		tipo: {
+			type: String
 		}
 	}]
 	
